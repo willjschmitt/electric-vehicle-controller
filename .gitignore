@@ -30,3 +30,20 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio Files
+*.vcxproj*
+*.sln
+.vs/
+
+# CMake Files
+CMakeFiles/
+CTestTestfile.cmake
+*.dir/
+Testing/Temporary
+cmake_install.cmake
+DartConfiguration.tcl
+CMakeCache.txt
+
+# Build directories
+Debug/
