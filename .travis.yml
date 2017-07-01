@@ -3,4 +3,4 @@ language:
 script:
   - cmake .
   - make
-  - ctest
+  - ctest --verbose
