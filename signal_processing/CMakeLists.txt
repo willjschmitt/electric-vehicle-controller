@@ -8,6 +8,7 @@ add_library(
   signal_processing
   math_constants.h
   angle_math.h angle_math.cc
+  clarke_transformations.h clarke_transformations.cc
   pi.h pi.cc)
 
 add_executable(
