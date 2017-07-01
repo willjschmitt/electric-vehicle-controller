@@ -6,15 +6,11 @@ config_compiler_and_linker()
 
 add_library(
   signal_processing
-  math_constants.h
-  pi.h pi.cc
-  angle_math.h angle_math.cc
-  clarke_transformations.h clarke_transformations.cc)
+  pi.h pi.cc)
 
 add_executable(
   signal_processing_test
   signal_processing_test.cc
-  angle_math_test.cc
   pi_test.cc)
 
 include(CTest)
