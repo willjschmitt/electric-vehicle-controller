@@ -7,6 +7,7 @@ config_compiler_and_linker()
 add_library(
   signal_processing
   math_constants.h
+  angle_math.h angle_math.cc
   pi.h pi.cc)
 
 add_executable(
