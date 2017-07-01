@@ -14,6 +14,7 @@ add_library(
 add_executable(
   signal_processing_test
   signal_processing_test.cc
+  angle_math_test.cc
   pi_test.cc)
 
 include(CTest)
