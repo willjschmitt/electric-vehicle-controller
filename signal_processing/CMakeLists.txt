@@ -8,10 +8,6 @@ include(CTest)
 enable_testing()
 
 add_library(
-  math_constants
-  math_constants.h)
-
-add_library(
   angle_math
   angle_math.h
   angle_math.cc)
