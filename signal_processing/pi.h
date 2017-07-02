@@ -1,6 +1,8 @@
 #ifndef SIGNAL_PROCESSING__PI__H_
 #define SIGNAL_PROCESSING__PI__H_
 
+#include "control/timer.h"
+
 namespace electric_vehicle {
 namespace signal_processing {
 
@@ -9,29 +11,41 @@ namespace signal_processing {
 class ProportionalIntegralController {
  public:
   ProportionalIntegralController(
-      const double& gain_proportional, const double& gain_integral,
-      const double& delta_timestep) :
+      ::electric_vehicle::control::TimerInterface* timer,
+      const double& gain_proportional, const double& gain_integral) :
+    timer_(timer),
     gain_proportional_(gain_proportional),
     gain_integral_(gain_integral),
-    delta_timestep_(delta_timestep) {
-    q_integral_ = 0.0;
-  }
+    q_integral_(0.0),
+    evaluated_(false) {}
 
   // Solves a current iteration of desired versus actual value for a single
-  // timestep.
+  // timestep. If it is the first time calling Solve, no integration/
+  // differentiation will occur.
   double Solve(const double& input_actual, const double& input_reference);
 
  private:
-  // The proportional gain for control.
-  const double gain_proportional_;
+  // Retrieves the delta time since the last time the instance was solved.
+  double DeltaTimestep();
 
-  // The integral gain for control.
+  // Samples and saves the curreent evaluation time as the last evaluation time.
+  void SampleLastEvaluationTime();
+   
+  // Timer used for calculation of solution of discrete control elements.
+  ::electric_vehicle::control::TimerInterface* timer_;
+
+  // The proportional and integral gains for control.
+  const double gain_proportional_;
   const double gain_integral_;
 
-  // The timestep at which the Solve method will be called.
-  const double delta_timestep_;
-
   double q_integral_;
+
+  // Last time the block was solved. Not initialized until Solve is called.
+  time_t last_evaluation_time_;
+
+  // Boolean indicating if the instance has been solved at least once yet.
+  // Used for intializting steps.
+  bool evaluated_;
 };
 
 }  // namespace signal_processing

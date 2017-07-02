@@ -7,6 +7,7 @@
 
 namespace electric_vehicle {
 namespace signal_processing {
+namespace {
 
 constexpr double kSmallError = 1E-9;
 
@@ -55,5 +56,12 @@ TEST(Rotate, Rotates45To115) {
   EXPECT_NEAR(rotated.y, 0.5, kSmallError);
 }
 
+}  // namespace
 }  // namespace signal_processing
 }  // namespace electric_vehicle
+
+int main(int argc, char** argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}

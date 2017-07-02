@@ -16,6 +16,22 @@ struct DirectQuadrature {
   double direct;
   double quadrature;
   double zero;
+
+  inline DirectQuadrature operator-(const DirectQuadrature& rhs) const {
+    DirectQuadrature result;
+    result.direct = this->direct - rhs.direct;
+    result.quadrature = this->quadrature - rhs.quadrature;
+    result.zero = this->zero - rhs.zero;
+    return result;
+  }
+
+  inline DirectQuadrature operator+(const DirectQuadrature& rhs) const {
+    DirectQuadrature result;
+    result.direct = this->direct + rhs.direct;
+    result.quadrature = this->quadrature + rhs.quadrature;
+    result.zero = this->zero + rhs.zero;
+    return result;
+  }
 };
 
 // Three Phase instantaneous values.

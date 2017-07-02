@@ -7,8 +7,27 @@
 
 namespace electric_vehicle {
 namespace signal_processing {
+namespace {
 
 constexpr double kSmallError = 1E-9;
+
+TEST(DirectQuadrature, SubtractOperator) {
+  const DirectQuadrature a{ 1.0, 2.0, 3.0 };
+  const DirectQuadrature b{ -1.0, -2.0, -3.0 };
+  const DirectQuadrature c = a - b;
+  EXPECT_DOUBLE_EQ(c.direct, 2.0);
+  EXPECT_DOUBLE_EQ(c.quadrature, 4.0);
+  EXPECT_DOUBLE_EQ(c.zero, 6.0);
+}
+
+TEST(DirectQuadrature, AdditionOperator) {
+  const DirectQuadrature a{ 1.0, 2.0, 3.0 };
+  const DirectQuadrature b{ 2.0, 3.0, 4.0 };
+  const DirectQuadrature c = a + b;
+  EXPECT_DOUBLE_EQ(c.direct, 3.0);
+  EXPECT_DOUBLE_EQ(c.quadrature, 5.0);
+  EXPECT_DOUBLE_EQ(c.zero, 7.0);
+}
 
 TEST(ClarkeTransformation, CalculatesAngle0) {
   ThreePhase abc;
@@ -101,5 +120,12 @@ TEST(ParkTransformation, CalculateZeroSequence) {
   EXPECT_NEAR(dq0.zero, kMagnitude, kSmallError);
 }
 
+}  // namespace
 }  // namespace signal_processing
 }  // namespace electric_vehicle
+
+int main(int argc, char** argv)
+{
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
