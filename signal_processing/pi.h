@@ -1,6 +1,8 @@
 #ifndef SIGNAL_PROCESSING__PI__H_
 #define SIGNAL_PROCESSING__PI__H_
 
+#include <cfloat>
+
 #include "control/timer.h"
 
 namespace electric_vehicle {
@@ -12,10 +14,13 @@ class ProportionalIntegralController {
  public:
   ProportionalIntegralController(
       ::electric_vehicle::control::TimerInterface* timer,
-      const double& gain_proportional, const double& gain_integral) :
+      const double& gain_proportional, const double& gain_integral,
+      const double& minimum = -DBL_MAX, const double& maximum = DBL_MAX) :
     timer_(timer),
     gain_proportional_(gain_proportional),
     gain_integral_(gain_integral),
+    minimum_(minimum),
+    maximum_(maximum),
     q_integral_(0.0),
     evaluated_(false) {}
 
@@ -37,6 +42,10 @@ class ProportionalIntegralController {
   // The proportional and integral gains for control.
   const double gain_proportional_;
   const double gain_integral_;
+
+  // Limits on the regulator output.
+  const double minimum_;
+  const double maximum_;
 
   double q_integral_;
 
