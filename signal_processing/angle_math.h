@@ -17,6 +17,14 @@ double Amplitude(const TwoDimensionalVector& in);
 TwoDimensionalVector Rotate(const TwoDimensionalVector& in,
                             const double& theta);
 
+// Scales a 2d vector linearly by multiplying the gain onto both vector
+// components.
+TwoDimensionalVector Scale(const TwoDimensionalVector& in, const double& gain);
+
+// Limits a 2-d vector to a magnitude, preserving angle.
+TwoDimensionalVector Limit(
+    const TwoDimensionalVector& in, const double& limit);
+
 }  // namespace signal_processing
 }  // namespace electric_vehicle
 

@@ -1,5 +1,6 @@
 #include "signal_processing/angle_math.h"
 
+#include <cfloat>
 #include <cmath>
 
 #include "gtest/gtest.h"
@@ -54,6 +55,32 @@ TEST(Rotate, Rotates45To115) {
   const TwoDimensionalVector rotated = Rotate(unrotated, +kPiBy2);
   EXPECT_NEAR(rotated.x, -0.5, kSmallError);
   EXPECT_NEAR(rotated.y, 0.5, kSmallError);
+}
+
+TEST(Scale, ScalesAVector) {
+  const TwoDimensionalVector unscaled{ 0.5, 1.0 };
+  const double kGain = 2.0;
+  const TwoDimensionalVector scaled = Scale(unscaled, kGain);
+  EXPECT_DOUBLE_EQ(scaled.x, 1.0);
+  EXPECT_DOUBLE_EQ(scaled.y, 2.0);
+}
+
+TEST(Limit, LimitsVectorPreservingAngle) {
+  // Make a 3-4-5 triangle doubled, with it limited to 5, so we get a 3-4-5
+  // out.
+  const TwoDimensionalVector unlimited{ 6.0, 8.0 };
+  const double kLimit = 5.0;
+  const TwoDimensionalVector limited = Limit(unlimited, kLimit);
+  EXPECT_DOUBLE_EQ(limited.x, 3.0);
+  EXPECT_DOUBLE_EQ(limited.y, 4.0);
+}
+
+TEST(Limit, LeavesVectorAlone) {
+  const TwoDimensionalVector unlimited{0.5, 1.0};
+  const double kLimit = DBL_MAX;
+  const TwoDimensionalVector limited = Limit(unlimited, kLimit);
+  EXPECT_DOUBLE_EQ(limited.x, 0.5);
+  EXPECT_DOUBLE_EQ(limited.y, 1.0);
 }
 
 }  // namespace
