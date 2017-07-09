@@ -36,3 +36,20 @@ target_link_libraries(
   timer_test
   timer
   gtest)
+
+add_library(
+  modulation
+  modulation.h
+  modulation.cc)
+target_link_libraries(
+  modulation
+  clarke_transformations)
+add_executable(
+  modulation_test
+  modulation_test.cc)
+add_test(modulation_test modulation_test)
+target_link_libraries(
+  modulation_test
+  modulation
+  clarke_transformations
+  gtest)
