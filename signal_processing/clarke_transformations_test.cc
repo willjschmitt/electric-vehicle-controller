@@ -11,6 +11,14 @@ namespace {
 
 constexpr double kSmallError = 1E-9;
 
+TEST(ThreePhase, ToVector) {
+  const ThreePhase three_phase_struct{0.1, 0.2, 0.3};
+  const std::vector<double> three_phase_vector = three_phase_struct.ToVector();
+  EXPECT_EQ(three_phase_vector[0], three_phase_struct.a);
+  EXPECT_EQ(three_phase_vector[1], three_phase_struct.b);
+  EXPECT_EQ(three_phase_vector[2], three_phase_struct.c);
+}
+
 TEST(DirectQuadrature, SubtractOperator) {
   const DirectQuadrature a{ 1.0, 2.0, 3.0 };
   const DirectQuadrature b{ -1.0, -2.0, -3.0 };
