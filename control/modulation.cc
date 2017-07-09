@@ -30,7 +30,7 @@ Phase IntegerToPhase(const int& integer_phase) {
 
 // Adds third harmonic to references by subtracting an average of the max and
 // min elements of the input vector.
-std::vector<double> AddThirdHarmonic(const std::vector<double> raw_voltages) {
+ThreePhase AddThirdHarmonic(ThreePhase raw_voltages) {
   const double voltage_max = *std::max_element(
       raw_voltages.begin(), raw_voltages.end());
   const double voltage_min = *std::min_element(
@@ -38,9 +38,10 @@ std::vector<double> AddThirdHarmonic(const std::vector<double> raw_voltages) {
 
   const double third_harmonic = (voltage_max + voltage_min) / 2.0;
 
-  std::vector<double> voltages_with_third_harmonic;
-  for (const double& voltage : raw_voltages) {
-    voltages_with_third_harmonic.push_back(voltage - third_harmonic);
+  ThreePhase voltages_with_third_harmonic;
+  for (unsigned int i = 0; i < voltages_with_third_harmonic.size(); i++) {
+    const double& voltage = raw_voltages[i];
+    voltages_with_third_harmonic[i] = voltage - third_harmonic;
   }
   return voltages_with_third_harmonic;
 }
@@ -57,11 +58,8 @@ double TwoLevelSineModulationDutyCycle(
 
 ModulationCommands TwoLevelSineModulator::Modulate(
     const ThreePhase& voltage_references, const double& dc_voltage) const {
-  const std::vector<double> voltage_reference_vector
-      = voltage_references.ToVector();
-
-  const std::vector<double> voltages_with_third_harmonic
-      = AddThirdHarmonic(voltage_reference_vector);
+  const ThreePhase& voltages_with_third_harmonic
+      = AddThirdHarmonic(voltage_references);
 
   std::vector<double> duty_cycles;
   for (const double& ac_voltage_reference : voltages_with_third_harmonic) {

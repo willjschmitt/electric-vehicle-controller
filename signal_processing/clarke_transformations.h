@@ -1,6 +1,7 @@
 #ifndef SIGNAL_PROCESSING__CLARKE_TRANSFORMATIONS__H_
 #define SIGNAL_PROCESSING__CLARKE_TRANSFORMATIONS__H_
 
+#include <array>
 #include <vector>
 
 namespace electric_vehicle {
@@ -39,15 +40,34 @@ struct DirectQuadrature {
 // Three Phase instantaneous values.
 class ThreePhase {
  public:
-  double a;
-  double b;
-  double c;
+  typedef std::array<double, 3>::iterator iterator;
+  typedef std::array<double, 3>::const_iterator const_iterator;
+  typedef std::array<double, 3>::size_type size_type;
+  typedef double value_type;
 
-  double& operator[](const std::size_t index);
-  const double& operator[](const std::size_t index) const;
+  ThreePhase() {}
+  ThreePhase(const std::array<double, 3> values)
+    : values_(values) {}
+  ThreePhase(const double& a, const double& b, const double& c)
+    : values_{a, b, c} {}
 
-  // Converts the three phase struct into a vector of the three phase values.
-  std::vector<double> ToVector() const;
+  double& A(){ return values_[0]; };
+  double& B(){ return values_[1]; };
+  double& C(){ return values_[2]; };
+
+  double& operator[](const std::size_t index) { return values_[index]; };
+  const double& operator[](const std::size_t index) const { return values_[index]; };
+ 
+  iterator begin() { return values_.begin(); }
+  iterator end() { return values_.end(); }
+
+  const_iterator begin() const { return values_.begin(); }
+  const_iterator end() const { return values_.end(); }
+
+  size_type size() { return values_.size(); }
+ 
+ private:
+  std::array<double, 3> values_;
 };
 
 // Converts three-phase instantaneous values into the alpha beta reference

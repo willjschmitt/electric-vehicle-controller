@@ -9,41 +9,11 @@
 namespace electric_vehicle {
 namespace signal_processing {
 
-double& ThreePhase::operator[](const std::size_t index) {
-  switch (index) {
-  case 0:
-    return a;
-  case 1:
-    return b;
-  case 2:
-    return c;
-  default:
-    throw std::invalid_argument("Index out of bounds");
-  }
-}
-
-const double& ThreePhase::operator[](const std::size_t index) const {
-  switch (index) {
-  case 0:
-    return a;
-  case 1:
-    return b;
-  case 2:
-    return c;
-  default:
-    throw std::invalid_argument("Index out of bounds");
-  }
-}
-
-std::vector<double> ThreePhase::ToVector() const {
-  return std::vector<double>{a, b, c};
-}
-
 AlphaBeta ClarkeTransformation(ThreePhase three_phase) {
   AlphaBeta transformed;
-  transformed.alpha = three_phase.a - 0.5 * (three_phase.b + three_phase.c);
-  transformed.beta = kSqrt3Over2 * (three_phase.b - three_phase.c);
-  transformed.gamma = 0.5 * (three_phase.a + three_phase.b + three_phase.c);
+  transformed.alpha = three_phase.A() - 0.5 * (three_phase.B() + three_phase.C());
+  transformed.beta = kSqrt3Over2 * (three_phase.B() - three_phase.C());
+  transformed.gamma = 0.5 * (three_phase.A() + three_phase.B() + three_phase.C());
   transformed.alpha *= 2.0 / 3.0;
   transformed.beta *= 2.0 / 3.0;
   transformed.gamma *= 2.0 / 3.0;
