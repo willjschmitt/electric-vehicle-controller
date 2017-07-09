@@ -43,6 +43,9 @@ class ThreePhase {
   double b;
   double c;
 
+  double& operator[](const std::size_t index);
+  const double& operator[](const std::size_t index) const;
+
   // Converts the three phase struct into a vector of the three phase values.
   std::vector<double> ToVector() const;
 };

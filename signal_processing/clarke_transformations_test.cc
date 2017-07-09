@@ -11,6 +11,49 @@ namespace {
 
 constexpr double kSmallError = 1E-9;
 
+TEST(ThreePhase, SubscriptOperatorWithConstReturns) {
+  const double kA = 0.1;
+  const double kB = 0.2;
+  const double kC = 0.3;
+  const ThreePhase three_phase{kA, kB, kC};
+  const double& got_a = three_phase[0];
+  const double& got_b = three_phase[1];
+  const double& got_c = three_phase[2];
+  EXPECT_DOUBLE_EQ(got_a, kA);
+  EXPECT_DOUBLE_EQ(got_b, kB);
+  EXPECT_DOUBLE_EQ(got_c, kC);
+}
+
+TEST(ThreePhase, SubscriptOperatorWithNonConstReturns) {
+  const double kA = 0.1;
+  const double kB = 0.2;
+  const double kC = 0.3;
+  ThreePhase three_phase{kA, kB, kC};
+  double& got_a = three_phase[0];
+  double& got_b = three_phase[1];
+  double& got_c = three_phase[2];
+  EXPECT_DOUBLE_EQ(got_a, kA);
+  EXPECT_DOUBLE_EQ(got_b, kB);
+  EXPECT_DOUBLE_EQ(got_c, kC);
+}
+
+TEST(ThreePhase, SubscriptOperatorIsSettable) {
+  const double kA = 0.1;
+  const double kB = 0.2;
+  const double kC = 0.3;
+  ThreePhase three_phase{kA, kB, kC};
+  // Shift the order of the values by one to check if it persists.
+  three_phase[0] = kB;
+  three_phase[1] = kC;
+  three_phase[2] = kA;
+  const double& got_a = three_phase[0];
+  const double& got_b = three_phase[1];
+  const double& got_c = three_phase[2];
+  EXPECT_DOUBLE_EQ(got_a, kB);
+  EXPECT_DOUBLE_EQ(got_b, kC);
+  EXPECT_DOUBLE_EQ(got_c, kA);
+}
+
 TEST(ThreePhase, ToVector) {
   const ThreePhase three_phase_struct{0.1, 0.2, 0.3};
   const std::vector<double> three_phase_vector = three_phase_struct.ToVector();

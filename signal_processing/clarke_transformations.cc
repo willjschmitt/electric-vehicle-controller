@@ -1,5 +1,6 @@
 #include "signal_processing/clarke_transformations.h"
 
+#include <exception>
 #include <vector>
 
 #include "signal_processing/math_constants.h"
@@ -7,6 +8,32 @@
 
 namespace electric_vehicle {
 namespace signal_processing {
+
+double& ThreePhase::operator[](const std::size_t index) {
+  switch (index) {
+  case 0:
+    return a;
+  case 1:
+    return b;
+  case 2:
+    return c;
+  default:
+    throw std::invalid_argument("Index out of bounds");
+  }
+}
+
+const double& ThreePhase::operator[](const std::size_t index) const {
+  switch (index) {
+  case 0:
+    return a;
+  case 1:
+    return b;
+  case 2:
+    return c;
+  default:
+    throw std::invalid_argument("Index out of bounds");
+  }
+}
 
 std::vector<double> ThreePhase::ToVector() const {
   return std::vector<double>{a, b, c};
