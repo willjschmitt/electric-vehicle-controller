@@ -1,10 +1,16 @@
 #include "signal_processing/clarke_transformations.h"
 
+#include <vector>
+
 #include "signal_processing/math_constants.h"
 #include "signal_processing/angle_math.h"
 
 namespace electric_vehicle {
 namespace signal_processing {
+
+std::vector<double> ThreePhase::ToVector() const {
+  return std::vector<double>{a, b, c};
+}
 
 AlphaBeta ClarkeTransformation(ThreePhase three_phase) {
   AlphaBeta transformed;

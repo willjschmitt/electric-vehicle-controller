@@ -1,6 +1,8 @@
 #ifndef SIGNAL_PROCESSING__CLARKE_TRANSFORMATIONS__H_
 #define SIGNAL_PROCESSING__CLARKE_TRANSFORMATIONS__H_
 
+#include <vector>
+
 namespace electric_vehicle {
 namespace signal_processing {
 
@@ -35,10 +37,14 @@ struct DirectQuadrature {
 };
 
 // Three Phase instantaneous values.
-struct ThreePhase {
+class ThreePhase {
+ public:
   double a;
   double b;
   double c;
+
+  // Converts the three phase struct into a vector of the three phase values.
+  std::vector<double> ToVector() const;
 };
 
 // Converts three-phase instantaneous values into the alpha beta reference
