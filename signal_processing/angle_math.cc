@@ -1,9 +1,14 @@
 #include "signal_processing/angle_math.h"
 
 #include <cmath>
+#include <cstdlib>
 
 namespace electric_vehicle {
 namespace signal_processing {
+
+using std::abs;
+using std::pow;
+using std::sqrt;
 
 double Amplitude(const TwoDimensionalVector& in) {
   return sqrt(pow(in.x, 2.0) + pow(in.y, 2.0));
