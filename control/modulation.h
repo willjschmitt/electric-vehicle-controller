@@ -65,7 +65,7 @@ class TwoLevelSineModulator : public TwoLevelModulatorInterface {
   const std::chrono::duration<double> switching_period_;
 
   // Converts a duty cycle into a +V, -V set of switching commands.
-  std::vector<ModulationCommand> TwoLevelSineModulator::DutyCycleToCommands(
+  std::vector<ModulationCommand> DutyCycleToCommands(
     const double& duty_cycle) const;
 };
 
