@@ -1,5 +1,6 @@
 #include "signal_processing/pi.h"
 
+#include <chrono>
 #include <ctime>
 #include <iostream>
 
@@ -19,7 +20,7 @@ double ProportionalIntegralController::Solve(const double& input_actual,
   // Calculate error and PI component regulation actions.
   double error = input_reference - input_actual;
   const double q_proportional = error * gain_proportional_;
-  q_integral_ += error * gain_integral_ * DeltaTimestep();
+  q_integral_ += error * gain_integral_ * DeltaTimestep().count();
 
   // Apply limits with anti-windup logic by limiting the integral action.
   const double q_unlimited = q_integral_ + q_proportional;
@@ -38,8 +39,8 @@ double ProportionalIntegralController::Solve(const double& input_actual,
   return q_limited;
 }
 
-double ProportionalIntegralController::DeltaTimestep() {
-  return std::difftime(timer_->Time(), last_evaluation_time_);
+std::chrono::duration<double> ProportionalIntegralController::DeltaTimestep() {
+  return timer_->Time() - last_evaluation_time_;
 }
 
 void ProportionalIntegralController::SampleLastEvaluationTime() {

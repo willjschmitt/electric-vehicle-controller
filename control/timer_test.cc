@@ -1,6 +1,6 @@
 #include "control/timer.h"
 
-#include <ctime>
+#include <chrono>
 
 #include "gtest/gtest.h"
 
@@ -8,19 +8,23 @@ namespace electric_vehicle {
 namespace control {
 namespace {
 
+using std::chrono::duration;
+using std::chrono::system_clock;
+
 TEST(AbsoluteTimer, ProvidesTime) {
   // This test can definitely be flaky, but there's nothing that can be done to
   // mock the underlying timer without defeating the intent of the test itself,
   // which is checking the timer is returning roughly the same function.
-  const std::time_t want = std::time(NULL);
+  const system_clock::time_point want = system_clock::now();
   AbsoluteTimer timer;
-  const std::time_t got = timer.Time();
-  EXPECT_LE(std::difftime(got, want), 1E-6);
+  const system_clock::time_point got = timer.Time();
+  const duration<double> difference = got - want;
+  EXPECT_LE(difference.count(), 1E-6);
 }
 
 TEST(SettableTimer, ProvidesSetTime) {
   SettableTimer timer;
-  const std::time_t want = std::time(NULL);
+  const system_clock::time_point want = system_clock::now();
   timer.SetTime(want);
   EXPECT_EQ(timer.Time(), want);
 }
@@ -28,11 +32,11 @@ TEST(SettableTimer, ProvidesSetTime) {
 TEST(SettableTimer, ProvidesSetTimeMultipleTimes) {
   SettableTimer timer;
 
-  const std::time_t want1 = std::time(NULL);
+  const system_clock::time_point want1 = system_clock::now();
   timer.SetTime(want1);
   EXPECT_EQ(timer.Time(), want1);
 
-  const std::time_t want2 = std::time(NULL);
+  const system_clock::time_point want2 = system_clock::now();
   timer.SetTime(want2);
   EXPECT_EQ(timer.Time(), want2);
 }
@@ -41,11 +45,12 @@ TEST(SamplingTimer, ProvidesTime) {
   // This test can definitely be flaky, but there's nothing that can be done to
   // mock the underlying timer without defeating the intent of the test itself,
   // which is checking the timer is returning roughly the same function.
-  const std::time_t want = std::time(NULL);
+  const system_clock::time_point want = system_clock::now();
   SamplingTimer timer;
   timer.SampleTime();
-  const std::time_t got = timer.Time();
-  EXPECT_LE(std::difftime(got, want), 1E-6);
+  const system_clock::time_point got = timer.Time();
+  const duration<double> difference = got - want;
+  EXPECT_LE(difference.count(), 1E-6);
 }
 
 }  // namespace

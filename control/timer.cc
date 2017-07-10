@@ -1,28 +1,31 @@
 #include "control/timer.h"
 
-#include <ctime>
+#include <chrono>
 
 namespace electric_vehicle {
 namespace control {
 
-const std::time_t AbsoluteTimer::Time() {
-  return std::clock();
+using std::chrono::system_clock;
+
+const system_clock::time_point AbsoluteTimer::Time() {
+  std::chrono::system_clock::now();
+  return system_clock::now();
 }
 
-const std::time_t SettableTimer::Time() {
+const system_clock::time_point SettableTimer::Time() {
   return time_;
 }
 
-void SettableTimer::SetTime(std::time_t time){
+void SettableTimer::SetTime(system_clock::time_point time){
   time_ = time;
 }
 
-const std::time_t SamplingTimer::Time() {
+const system_clock::time_point SamplingTimer::Time() {
   return time_;
 }
 
 void SamplingTimer::SampleTime() {
-  time_ = std::clock();
+  time_ = system_clock::now();
 }
 
 }  // namespace control
