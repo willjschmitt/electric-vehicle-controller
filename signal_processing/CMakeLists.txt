@@ -37,6 +37,22 @@ target_link_libraries (
   gtest)
 
 add_library(
+  first_order_lag
+  first_order_lag.h
+  first_order_lag.cc)
+target_link_libraries (
+  first_order_lag
+  timer)
+add_executable(
+  first_order_lag_test
+  first_order_lag_test.cc)
+add_test(first_order_lag_test first_order_lag_test)
+target_link_libraries (
+  first_order_lag_test
+  first_order_lag
+  gtest)
+
+add_library(
   pi
   pi.h
   pi.cc)
