@@ -16,3 +16,9 @@ cmake .
 make # or your build system's equivalent.
 ctest # --verbose (for detailed test failures).
 ```
+
+To compile for the microcontroller, additional command line options are needed:
+```
+cmake -DCOMPILE_PIC=true .
+make
+```
