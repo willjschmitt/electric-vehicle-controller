@@ -3,4 +3,4 @@
 	url = https://github.com/google/googletest
 [submodule "cmake-microchip"]
 	path = cmake-microchip
-	url = git://github.com/Elemecca/cmake-microchip.git
+	url = git://github.com/willjschmitt/cmake-microchip.git
