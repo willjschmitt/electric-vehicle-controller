@@ -1,5 +1,6 @@
 #include "signal_processing/integrator.h"
 
+#include <cfloat>
 #include <chrono>
 
 #include "gtest/gtest.h"
@@ -21,17 +22,17 @@ TEST(Integrator, Integrates) {
   
   timer.SetTime(start);  
   const double integration1 = integrator.Integrate(kInput);
-  EXPECT_EQ(integration1, 0.0);
+  EXPECT_DOUBLE_EQ(integration1, 0.0);
   
   const seconds kOneSecond(1);
   timer.SetTime(start + kOneSecond);
   const double integration2 = integrator.Integrate(kInput);
-  EXPECT_EQ(integration2, 0.1);
+  EXPECT_DOUBLE_EQ(integration2, 0.1);
 
   const seconds kTwoSeconds(2);
   timer.SetTime(start + kTwoSeconds);
   const double integration3 = integrator.Integrate(kInput);
-  EXPECT_EQ(integration3, 0.2);
+  EXPECT_DOUBLE_EQ(integration3, 0.2);
 }
 
 TEST(Integrator, LimitsMinimum) {
@@ -45,17 +46,17 @@ TEST(Integrator, LimitsMinimum) {
   
   timer.SetTime(start);  
   const double calculation1 = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation1, 0.0);
+  EXPECT_DOUBLE_EQ(calculation1, 0.0);
   
   const seconds kOneSecond(1);
   timer.SetTime(start + kOneSecond);
   const double calculation2 = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation2, kMinimum);
+  EXPECT_DOUBLE_EQ(calculation2, kMinimum);
 
   const seconds kTwoSeconds(2);
   timer.SetTime(start + kTwoSeconds);
   const double calculation3 = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation3, kMinimum);
+  EXPECT_DOUBLE_EQ(calculation3, kMinimum);
 }
 
 TEST(Integrator, LimitsMaximum) {
@@ -69,17 +70,17 @@ TEST(Integrator, LimitsMaximum) {
 
   timer.SetTime(start);  
   const double calculation1 = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation1, 0.0);
+  EXPECT_DOUBLE_EQ(calculation1, 0.0);
   
   const seconds kOneSecond(1);
   timer.SetTime(start + kOneSecond);
   const double calculation2 = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation2, kMaximum);
+  EXPECT_DOUBLE_EQ(calculation2, kMaximum);
 
   const seconds kTwoSeconds(2);
   timer.SetTime(start + kTwoSeconds);
   const double calculation3 = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation3, kMaximum);
+  EXPECT_DOUBLE_EQ(calculation3, kMaximum);
 }
 
 TEST(Integrator, BacksOffOfMinimumWithoutIntegratorWindup) {
@@ -101,7 +102,7 @@ TEST(Integrator, BacksOffOfMinimumWithoutIntegratorWindup) {
     timer.SetTime(current_time);
     calculation = integrator.Integrate(kInput);
   }
-  EXPECT_EQ(calculation, -0.2);
+  EXPECT_DOUBLE_EQ(calculation, -0.2);
 
   // Reverse direction, and we should see the regulator immediately back off
   // the minimum, if it correctly avoided windup.
@@ -109,7 +110,7 @@ TEST(Integrator, BacksOffOfMinimumWithoutIntegratorWindup) {
   current_time += kTimeStep;
   timer.SetTime(current_time);
   calculation = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation, -0.1);
+  EXPECT_DOUBLE_EQ(calculation, -0.1);
 
 }
 
@@ -132,7 +133,7 @@ TEST(Integrator, BacksOffOfMaximumWithoutIntegratorWindup) {
     timer.SetTime(current_time);
     calculation = integrator.Integrate(kInput);
   }
-  EXPECT_EQ(calculation, +0.2);
+  EXPECT_DOUBLE_EQ(calculation, +0.2);
 
   // Reverse direction, and we should see the regulator immediately back off
   // the maximum, if it correctly avoided windup.
@@ -140,8 +141,80 @@ TEST(Integrator, BacksOffOfMaximumWithoutIntegratorWindup) {
   current_time += kTimeStep;
   timer.SetTime(current_time);
   calculation = integrator.Integrate(kInput);
-  EXPECT_EQ(calculation, +0.1);
+  EXPECT_DOUBLE_EQ(calculation, +0.1);
 
+}
+
+TEST(LoopingIntegrator, Integrates) {
+  SettableTimer timer;
+  system_clock::time_point start = system_clock::now();
+  constexpr double kMaximum = +DBL_MAX;
+  constexpr double kMinimum = -DBL_MAX;
+  LoopingIntegrator integrator(&timer, kMinimum, kMaximum);
+
+  constexpr double kInput = 0.1;
+  
+  timer.SetTime(start);  
+  const double integration1 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(integration1, 0.0);
+  
+  const seconds kOneSecond(1);
+  timer.SetTime(start + kOneSecond);
+  const double integration2 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(integration2, 0.1);
+
+  const seconds kTwoSeconds(2);
+  timer.SetTime(start + kTwoSeconds);
+  const double integration3 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(integration3, 0.2);
+}
+
+TEST(LoopingIntegrator, LoopsAtMinimum) {
+  const double kMinimum = -0.15;
+  const double kMaximum = +0.15;
+  SettableTimer timer;
+  const system_clock::time_point start = system_clock::now();
+  LoopingIntegrator integrator(&timer, kMinimum, kMaximum);
+
+  const double kInput = -0.1;
+  
+  timer.SetTime(start);  
+  const double calculation1 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(calculation1, 0.0);
+  
+  const seconds kOneSecond(1);
+  timer.SetTime(start + kOneSecond);
+  const double calculation2 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(calculation2, -0.1);
+
+  const seconds kTwoSeconds(2);
+  timer.SetTime(start + kTwoSeconds);
+  const double calculation3 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(calculation3, +0.1);
+}
+
+TEST(LoopingIntegrator, LoopsAtMaximum) {
+  const double kMinimum = -0.15;
+  const double kMaximum = +0.15;
+  SettableTimer timer;
+  const system_clock::time_point start = system_clock::now();
+  LoopingIntegrator integrator(&timer, kMinimum, kMaximum);
+
+  const double kInput = 0.1;
+
+  timer.SetTime(start);  
+  const double calculation1 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(calculation1, 0.0);
+  
+  const seconds kOneSecond(1);
+  timer.SetTime(start + kOneSecond);
+  const double calculation2 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(calculation2, +0.1);
+
+  const seconds kTwoSeconds(2);
+  timer.SetTime(start + kTwoSeconds);
+  const double calculation3 = integrator.Integrate(kInput);
+  EXPECT_DOUBLE_EQ(calculation3, -0.1);
 }
 
 }  // namespace
