@@ -67,3 +67,19 @@ target_link_libraries (
   pi_test
   pi
   gtest)
+
+add_library(
+  integrator
+  integrator.h
+  integrator.cc)
+target_link_libraries(
+  integrator
+  timer)
+add_executable(
+  integrator_test
+  integrator_test.cc)
+add_test(integrator_test integrator_test)
+target_link_libraries(
+  integrator_test
+  integrator
+  gtest)
