@@ -53,3 +53,21 @@ target_link_libraries(
   modulation
   clarke_transformations
   gtest)
+
+add_library(
+  stator_angle_estimator
+  stator_angle_estimator.h
+  stator_angle_estimator.cc)
+target_link_libraries(
+  stator_angle_estimator
+  clarke_transformations
+  integrator
+  timer)
+add_executable(
+  stator_angle_estimator_test
+  stator_angle_estimator_test.cc)
+add_test(stator_angle_estimator_test stator_angle_estimator_test)
+target_link_libraries(
+  stator_angle_estimator_test
+  stator_angle_estimator
+  gtest)

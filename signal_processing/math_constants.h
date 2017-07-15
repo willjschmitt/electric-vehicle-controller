@@ -4,11 +4,14 @@
 namespace electric_vehicle {
 namespace signal_processing {
 
+constexpr double kZero = 0.0;
+
 constexpr double kSqrt2 = 1.41421356237;
 constexpr double kSqrt3 = 1.73205080757;
 constexpr double kSqrt3Over2 = 0.86602540378;
 
 constexpr double kPi = 3.14159265359;
+constexpr double k2Pi = 6.28318530718;
 constexpr double kPiBy2 = 1.57079632679;
 constexpr double k2PiBy3 = 2.09439510239;
 
