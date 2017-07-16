@@ -163,6 +163,35 @@ TEST(ParkTransformation, CalculateZeroSequence) {
   EXPECT_NEAR(dq0.zero, kMagnitude, kSmallError);
 }
 
+TEST(InverseClarkeTransformation, ClarkeTransformationIsReversible) {
+  ThreePhase abc;
+  const double kMagnitude = 1.0;
+  const double kTheta = kPiBy2;
+  abc.A() = kMagnitude * cos(kTheta);
+  abc.B() = kMagnitude * cos(kTheta - k2PiBy3);
+  abc.C() = kMagnitude * cos(kTheta + k2PiBy3);
+  const AlphaBeta alpha_beta = ClarkeTransformation(abc);
+  const ThreePhase got = InverseClarkeTransformation(alpha_beta);
+  EXPECT_NEAR(got.A(), abc.A(), kSmallError);
+  EXPECT_NEAR(got.B(), abc.B(), kSmallError);
+  EXPECT_NEAR(got.C(), abc.C(), kSmallError);
+}
+
+TEST(InverseParkTransformation, ParkTransformationIsReversible) {
+  ThreePhase abc;
+  const double kMagnitude = 1.0;
+  const double kTheta = kPiBy2;
+  abc.A() = kMagnitude * cos(kTheta);
+  abc.B() = kMagnitude * cos(kTheta - k2PiBy3);
+  abc.C() = kMagnitude * cos(kTheta + k2PiBy3);
+  const DirectQuadrature dq0 = ParkTransformation(abc, kTheta);
+  const ThreePhase got = InverseParkTransformation(dq0, kTheta);
+  EXPECT_NEAR(got.A(), abc.A(), kSmallError);
+  EXPECT_NEAR(got.B(), abc.B(), kSmallError);
+  EXPECT_NEAR(got.C(), abc.C(), kSmallError);
+}
+
+
 }  // namespace
 }  // namespace signal_processing
 }  // namespace electric_vehicle

@@ -55,6 +55,10 @@ class ThreePhase {
   double& B(){ return values_[1]; };
   double& C(){ return values_[2]; };
 
+  double A() const { return values_[0]; };
+  double B() const { return values_[1]; };
+  double C() const { return values_[2]; };
+
   double& operator[](const std::size_t index) { return values_[index]; };
   const double& operator[](const std::size_t index) const { return values_[index]; };
  
@@ -80,6 +84,15 @@ AlphaBeta ClarkeTransformation(ThreePhase three_phase);
 // See: https://en.wikipedia.org/wiki/Direct-quadrature-zero_transformation.
 DirectQuadrature ParkTransformation(const ThreePhase& three_phase,
                                     const double& theta);
+
+// Converts a alpha-beta reference frame into three-phase instantaneous values.
+// See: https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_transformation.
+ThreePhase InverseClarkeTransformation(const AlphaBeta& alpha_beta);
+
+// Converts a dq0 reference frame into three-phase instantaneous values.
+// See: https://en.wikipedia.org/wiki/Direct-quadrature-zero_transformation.
+ThreePhase InverseParkTransformation(const DirectQuadrature& direct_quadrature,
+                                     const double& theta);
 
 }  // namespace signal_processing
 }  // namespace electric_vehicle

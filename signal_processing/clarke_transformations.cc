@@ -32,5 +32,29 @@ DirectQuadrature ParkTransformation(const ThreePhase& three_phase,
   return dq0;
 }
 
+ThreePhase InverseClarkeTransformation(const AlphaBeta& alpha_beta) {
+  const double a = alpha_beta.alpha + alpha_beta.gamma;
+  const double b = -0.5 * alpha_beta.alpha + kSqrt3Over2 * alpha_beta.beta
+      + alpha_beta.gamma;
+  const double c = -0.5 * alpha_beta.alpha - kSqrt3Over2 * alpha_beta.beta
+      + alpha_beta.gamma;
+  return ThreePhase(a, b, c);
+}
+
+ThreePhase InverseParkTransformation(const DirectQuadrature& direct_quadrature,
+                                     const double& theta) {
+  const TwoDimensionalVector xy_in_dq_frame{
+    direct_quadrature.direct,
+    direct_quadrature.quadrature,
+  };
+  const TwoDimensionalVector xy_in_ab_frame = Rotate(xy_in_dq_frame, +theta);
+  const AlphaBeta alpha_beta{
+    xy_in_ab_frame.x,
+    xy_in_ab_frame.y,
+  };
+  const ThreePhase abc = InverseClarkeTransformation(alpha_beta);
+  return abc;
+}
+
 }  // namespace signal_processing
 }  // namespace electric_vehicle
