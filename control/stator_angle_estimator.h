@@ -14,7 +14,7 @@ namespace control {
 class StatorAngleEstimator {
  public:
   StatorAngleEstimator(
-    TimerInterface* timer, const double& number_poles,
+    TimerInterface* timer, const unsigned int& number_poles,
     const double& rotor_inductance, const double& rotor_resistance)
     : integrator_(timer, ::electric_vehicle::signal_processing::kZero,
       ::electric_vehicle::signal_processing::k2Pi),
