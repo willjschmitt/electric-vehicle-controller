@@ -16,7 +16,7 @@ using ::electric_vehicle::signal_processing::ThreePhase;
 using ::electric_vehicle::signal_processing::TwoDimensionalVector;
 
 ModulationCommands InductionMotorController::CoreControlsTask() {
-  const double throttle = throttle_sampler_.Sample();
+  const double throttle = throttle_sampler_->Sample();
   
   const double quadrature_current_reference = TorqueController(throttle);
   // TODO(willjschmitt): Set the direct current reference appropriately.
@@ -24,13 +24,13 @@ ModulationCommands InductionMotorController::CoreControlsTask() {
   const DirectQuadrature current_reference_dq{
       direct_current_reference, quadrature_current_reference, 0.0};
 
-  const double mechanical_speed = speed_sampler_.Sample();
+  const double mechanical_speed = speed_sampler_->Sample();
 
   const double estimated_stator_angle = stator_angle_estimator_.Estimate(
       mechanical_speed, direct_current_reference,
       quadrature_current_reference);
 
-  const ThreePhase current_feedback = current_sampler_.Sample();
+  const ThreePhase current_feedback = current_sampler_->Sample();
   const DirectQuadrature current_feedback_dq = ParkTransformation(
       current_feedback, estimated_stator_angle);
 
@@ -39,7 +39,7 @@ ModulationCommands InductionMotorController::CoreControlsTask() {
 
   const ThreePhase voltage_reference_abc = InverseParkTransformation(
       voltage_reference, estimated_stator_angle);
-  const double dc_voltage = dc_voltage_sampler_.Sample();
+  const double dc_voltage = dc_voltage_sampler_->Sample();
   const ModulationCommands modulation_commands = modulator_.Modulate(
       voltage_reference_abc, dc_voltage);
   return modulation_commands;

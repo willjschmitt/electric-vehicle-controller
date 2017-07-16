@@ -1,5 +1,8 @@
 #include "induction_motor_controls/induction_motor_controller.h"
 
+#include <iostream>
+#include <memory>
+
 #include "control/current_regulator.h"
 #include "control/timer.h"
 #include "gtest/gtest.h"
@@ -24,6 +27,8 @@ using ::electric_vehicle::measurement::ThreePhaseMeasurementInterface;
 using ::electric_vehicle::measurement::ThrottleInterface;
 using ::electric_vehicle::signal_processing::ThreePhase;
 using ::std::chrono::microseconds;
+
+static const microseconds kCoreControlsTaskRate(100);
 
 class StubThrottle : public ThrottleInterface {
  public:
@@ -53,43 +58,78 @@ class StubDcVoltageMeasurement : public DcVoltageMeasurementInterface {
   double voltage_;
 };
 
+class InductionMotorControllerTest : public ::testing::Test {
+ protected:
+  void SetUp() {
+    
+    // TODO(willjschmitt): Set this with real values when the test is actually
+    // fleshed out.
+    constexpr double kMagnetizingInductance = 0.0;
+    constexpr double kStatorInductance = 0.0;
+    constexpr double kStatorResistance = 0.0;
+    constexpr double kRotorInductance = 0.0;
+    constexpr double kRotorResistance = 0.0;
+    constexpr unsigned int kNumberOfPoles = 2;
+    const InductionMachine induction_machine(
+        kMagnetizingInductance, kStatorInductance, kStatorResistance,
+        kRotorInductance, kRotorResistance, kNumberOfPoles);
+    // TODO(willjschmitt): Tune gains with real values when the test is actually
+    // fleshed out.
+    constexpr double kCurrentRegulatorProportionalGain = 1.0;
+    constexpr double kCurrentRegulatorIntegralGain = 1000.0;
+    constexpr double kDirectVoltageMaximum = 1.0;
+    constexpr double kQuadratureVoltageMaximum  = 1.0;
+    CurrentRegulator current_regulator(
+        &timer, kCurrentRegulatorProportionalGain,
+        kCurrentRegulatorIntegralGain, -kDirectVoltageMaximum,
+        +kDirectVoltageMaximum, -kQuadratureVoltageMaximum,
+        +kQuadratureVoltageMaximum);
+    throttle_sampler.reset(new StubThrottle());
+    speed_sampler.reset(new StubMechanicalSpeed());
+    current_sampler.reset(new StubThreePhaseMeasurement());
+    dc_voltage_sampler.reset(new StubDcVoltageMeasurement());
+    controller.reset(new InductionMotorController(
+        &timer, throttle_sampler.get(), speed_sampler.get(),
+        current_sampler.get(), dc_voltage_sampler.get(),
+        induction_machine, current_regulator,
+        kCoreControlsTaskRate));
+  }
+
+  SettableTimer timer;
+  std::unique_ptr<StubThrottle> throttle_sampler;
+  std::unique_ptr<StubMechanicalSpeed> speed_sampler;
+  std::unique_ptr<StubThreePhaseMeasurement> current_sampler;
+  std::unique_ptr<StubDcVoltageMeasurement> dc_voltage_sampler;
+  std::unique_ptr<InductionMotorController> controller;
+};
+
 // This test is mostly to enforce compilation and linking for the composite
 // elements.
-TEST(InductionMotorController, Creates) {
-  SettableTimer timer;
-  const StubThrottle throttle_sampler;
-  const StubMechanicalSpeed speed_sampler;
-  const StubThreePhaseMeasurement current_sampler;
-  const StubDcVoltageMeasurement dc_voltage_sampler;
-  // TODO(willjschmitt): Set this with real values when the test is actually
-  // fleshed out.
-  constexpr double kMagnetizingInductance = 0.0;
-  constexpr double kStatorInductance = 0.0;
-  constexpr double kStatorResistance = 0.0;
-  constexpr double kRotorInductance = 0.0;
-  constexpr double kRotorResistance = 0.0;
-  constexpr unsigned int kNumberOfPoles = 2;
-  const InductionMachine induction_machine(
-      kMagnetizingInductance, kStatorInductance, kStatorResistance,
-      kRotorInductance, kRotorResistance, kNumberOfPoles);
-  // TODO(willjschmitt): Tune gains with real values when the test is actually
-  // fleshed out.
-  constexpr double kCurrentRegulatorProportionalGain = 1.0;
-  constexpr double kCurrentRegulatorIntegralGain = 1000.0;
-  constexpr double kDirectVoltageMaximum = 1.0;
-  constexpr double kQuadratureVoltageMaximum  = 1.0;
-  CurrentRegulator current_regulator(
-      &timer, kCurrentRegulatorProportionalGain,
-      kCurrentRegulatorIntegralGain, -kDirectVoltageMaximum,
-      +kDirectVoltageMaximum, -kQuadratureVoltageMaximum,
-      +kQuadratureVoltageMaximum);
-  const microseconds kCoreControlsTaskRate(100);
-  InductionMotorController controller(
-      &timer, throttle_sampler, speed_sampler, current_sampler,
-      dc_voltage_sampler, induction_machine, current_regulator,
-      kCoreControlsTaskRate);
+TEST_F(InductionMotorControllerTest, Creates) {
+  const ModulationCommands modulation_commands = controller->CoreControlsTask();
+}
 
-  const ModulationCommands modulation_commands = controller.CoreControlsTask();
+// Quickly checks that the main control loop executes quickly enough.
+// This is likely to be flaky, but it does put some downward pressure on time
+// to identify when the computing takes too long. It's performance is, of
+// course, dependent on the system
+TEST_F(InductionMotorControllerTest, PerformanceTest) {
+  const unsigned int kNumberOfTimes = (unsigned int)1E2;
+  const std::chrono::system_clock::time_point start_time
+      = std::chrono::system_clock::now();
+  for (unsigned int i = 0; i < kNumberOfTimes; i++) {
+    const ModulationCommands modulation_commands = controller->CoreControlsTask();
+  }
+  const std::chrono::system_clock::time_point end_time
+      = std::chrono::system_clock::now();
+  const std::chrono::system_clock::duration total_time = end_time - start_time;
+  const long long time_per_run
+      = std::chrono::duration_cast<std::chrono::microseconds>(total_time).count() / kNumberOfTimes;
+  EXPECT_LE(time_per_run, kCoreControlsTaskRate.count());
+  std::cout << "============PERFORMANCE============" << std::endl;
+  std::cout << "Total time: " << total_time.count() << " seconds" << std::endl;
+  std::cout << "Timer per run: " << time_per_run << " uSeconds" << std::endl;
+  std::cout << "============END============" << std::endl;
 }
 
 }  // namespace

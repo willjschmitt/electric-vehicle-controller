@@ -20,13 +20,13 @@ class InductionMotorController {
  public:
   InductionMotorController(
       ::electric_vehicle::control::TimerInterface* timer,
-      const ::electric_vehicle::measurement::ThrottleInterface&
+      const ::electric_vehicle::measurement::ThrottleInterface*
           throttle_sampler,
-      const ::electric_vehicle::measurement::MechanicalSpeedInterface&
+      const ::electric_vehicle::measurement::MechanicalSpeedInterface*
           speed_sampler,
-      const ::electric_vehicle::measurement::ThreePhaseMeasurementInterface&
+      const ::electric_vehicle::measurement::ThreePhaseMeasurementInterface*
           current_sampler,
-      const ::electric_vehicle::measurement::DcVoltageMeasurementInterface&
+      const ::electric_vehicle::measurement::DcVoltageMeasurementInterface*
           dc_voltage_sampler,
       const ::electric_vehicle::machines::InductionMachine& induction_machine,
       const ::electric_vehicle::control::CurrentRegulator& current_regulator,
@@ -48,18 +48,18 @@ class InductionMotorController {
 
  private:
   // Samples the throttle position.
-  const ::electric_vehicle::measurement::ThrottleInterface& throttle_sampler_;
+  const ::electric_vehicle::measurement::ThrottleInterface* throttle_sampler_;
 
   // Samples the current mechanical speed.
-  const ::electric_vehicle::measurement::MechanicalSpeedInterface&
+  const ::electric_vehicle::measurement::MechanicalSpeedInterface*
       speed_sampler_;
 
   // Samples the three phase stator current feedback.
-  const ::electric_vehicle::measurement::ThreePhaseMeasurementInterface&
+  const ::electric_vehicle::measurement::ThreePhaseMeasurementInterface*
       current_sampler_;
 
   // Samples the DC voltage from the battery/inverter input.
-  const ::electric_vehicle::measurement::DcVoltageMeasurementInterface&
+  const ::electric_vehicle::measurement::DcVoltageMeasurementInterface*
       dc_voltage_sampler_;
 
   // Estimates the rotor flux angle for voltage generation and current
