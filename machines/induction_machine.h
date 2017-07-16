@@ -17,6 +17,17 @@ namespace machines {
 // o------------------------
 class InductionMachine {
  public:
+  InductionMachine(
+      const double& magnetizing_inductance, const double& stator_inductance,
+      const double& stator_resistance, const double& rotor_inductance,
+      const double& rotor_resistance, const unsigned int& number_of_poles)
+      : magnetizing_inductance_(magnetizing_inductance),
+        stator_inductance_(stator_inductance),
+        stator_resistance_(stator_resistance),
+        rotor_inductance_(rotor_inductance),
+        rotor_resistance_(rotor_resistance),
+        number_of_poles_(number_of_poles) {}
+
   // Inductance of the magnetizing branch of the motor Lm.
   double MagnetizingInductance() const { return magnetizing_inductance_; }
 
@@ -32,17 +43,10 @@ class InductionMachine {
   // Resistance of the rotor winding referred to the stator side.
   double RotorResistancePrimary() const { return rotor_resistance_; }
 
- private:
-  InductionMachine(
-      const double& magnetizing_inductance, const double& stator_inductance,
-      const double& stator_resistance, const double& rotor_inductance,
-      const double& rotor_resistance)
-      : magnetizing_inductance_(magnetizing_inductance),
-        stator_inductance_(stator_inductance),
-        stator_resistance_(stator_resistance),
-        rotor_inductance_(rotor_inductance),
-        rotor_resistance_(rotor_resistance) {}
+  // Number of poles (not pole pairs) in the induction machine.
+  unsigned int NumberOfPoles() const { return number_of_poles_; }
 
+ private:
   // Inductance of the magnetizing branch of the motor Lm referred to the
   // stator side. Units: Henries.
   const double magnetizing_inductance_;
@@ -62,6 +66,9 @@ class InductionMachine {
   // Resistance of the rotor winding referred to the stator side. Units:
   // Ohms.
   const double rotor_resistance_;
+
+  // Number of poles (not pole pairs) in the induction machine.
+  const unsigned int number_of_poles_;
 };
 
 }  // namespace machines
