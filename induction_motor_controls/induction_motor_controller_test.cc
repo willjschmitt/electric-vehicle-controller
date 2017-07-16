@@ -112,7 +112,8 @@ TEST_F(InductionMotorControllerTest, Creates) {
 // Quickly checks that the main control loop executes quickly enough.
 // This is likely to be flaky, but it does put some downward pressure on time
 // to identify when the computing takes too long. It's performance is, of
-// course, dependent on the system
+// course, dependent on the system. Adjust the count of tries and acceptable
+// time as needed.
 TEST_F(InductionMotorControllerTest, PerformanceTest) {
   const unsigned int kNumberOfTimes = (unsigned int)1E2;
   const std::chrono::system_clock::time_point start_time
@@ -129,7 +130,7 @@ TEST_F(InductionMotorControllerTest, PerformanceTest) {
   std::cout << "============PERFORMANCE============" << std::endl;
   std::cout << "Total time: " << total_time.count() << " seconds" << std::endl;
   std::cout << "Timer per run: " << time_per_run << " uSeconds" << std::endl;
-  std::cout << "============END============" << std::endl;
+  std::cout << "===============END=================" << std::endl;
 }
 
 }  // namespace
