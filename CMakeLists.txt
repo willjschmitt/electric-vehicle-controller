@@ -16,4 +16,5 @@ add_subdirectory(googletest)
 
 add_subdirectory(control)
 add_subdirectory(machines)
+add_subdirectory(measurement)
 add_subdirectory(signal_processing)
