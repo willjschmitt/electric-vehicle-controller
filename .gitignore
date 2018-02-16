@@ -51,3 +51,6 @@ Debug/
 # Microchip PIC Binaries
 *.elf
 *.hex
+
+# Googletest files.
+*.pc
