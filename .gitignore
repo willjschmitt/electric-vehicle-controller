@@ -54,3 +54,8 @@ Debug/
 
 # Googletest files.
 *.pc
+
+# MPLAB Files
+nbproject/Makefile-*
+nbproject/Package-*
+nbproject/private/
