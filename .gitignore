@@ -47,6 +47,9 @@ CMakeCache.txt
 
 # Build directories
 Debug/
+build/
+debug/
+dist/
 
 # Microchip PIC Binaries
 *.elf
