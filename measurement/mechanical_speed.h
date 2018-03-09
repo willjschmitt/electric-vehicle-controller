@@ -9,6 +9,11 @@ class MechanicalSpeedInterface {
   virtual double Sample() const = 0;
 };
 
+class PIC32MechanicalSpeedSampler : public MechanicalSpeedInterface{
+ public:
+  double Sample() const override;
+};
+
 }
 }
 

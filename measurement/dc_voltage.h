@@ -10,6 +10,12 @@ class DcVoltageMeasurementInterface {
   virtual double Sample() const = 0;
 };
 
+
+class PIC32DcVoltageSampler : public DcVoltageMeasurementInterface {
+ public:
+  double Sample() const override;
+};
+
 }
 }
 

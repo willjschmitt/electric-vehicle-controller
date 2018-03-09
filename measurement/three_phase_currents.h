@@ -12,6 +12,12 @@ class ThreePhaseMeasurementInterface {
        const = 0;
 };
 
+
+class PIC32ThreePhaseCurrentSampler : public ThreePhaseMeasurementInterface {
+ public:
+   ::electric_vehicle::signal_processing::ThreePhase Sample() const override;
+};
+    
 }  // namespace measurement
 }  // namespace electric_vehicle
 

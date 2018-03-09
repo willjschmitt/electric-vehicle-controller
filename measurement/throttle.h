@@ -11,6 +11,13 @@ class ThrottleInterface {
   virtual double Sample() const = 0;
 };
 
+class PIC32ThrottleSampler : public ThrottleInterface {
+ public:
+  PIC32ThrottleSampler() {}
+  
+  double Sample() const override;
+};
+
 }  // namespace measurement
 }  // namespace electric_vehicle
 
