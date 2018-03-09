@@ -10,7 +10,7 @@ enable_testing()
 add_library(
   induction_motor_controller
   induction_motor_controller.h
-  induction_motor_controller.cc)
+  induction_motor_controller.cpp)
 target_link_libraries(
   induction_motor_controller
   current_regulator
@@ -24,7 +24,7 @@ target_link_libraries(
   timer)
 add_executable(
   induction_motor_controller_test
-  induction_motor_controller_test.cc)
+  induction_motor_controller_test.cpp)
 add_test(induction_motor_controller_test induction_motor_controller_test)
 target_link_libraries(
   induction_motor_controller_test

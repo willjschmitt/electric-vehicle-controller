@@ -10,10 +10,10 @@ enable_testing()
 add_library(
   three_phase_currents
   three_phase_currents.h
-  three_phase_currents.cc)
+  three_phase_currents.cpp)
 add_executable(
   three_phase_currents_test
-  three_phase_currents_test.cc)
+  three_phase_currents_test.cpp)
 add_test(three_phase_currents_test three_phase_currents_test)
 target_link_libraries(
   three_phase_currents_test
@@ -23,10 +23,10 @@ target_link_libraries(
 add_library(
   dc_voltage
   dc_voltage.h
-  dc_voltage.cc)
+  dc_voltage.cpp)
 add_executable(
   dc_voltage_test
-  dc_voltage_test.cc)
+  dc_voltage_test.cpp)
 add_test(dc_voltage_test dc_voltage_test)
 target_link_libraries(
   dc_voltage_test
@@ -36,10 +36,10 @@ target_link_libraries(
 add_library(
   throttle
   throttle.h
-  throttle.cc)
+  throttle.cpp)
 add_executable(
   throttle_test
-  throttle_test.cc)
+  throttle_test.cpp)
 add_test(throttle_test throttle_test)
 target_link_libraries(
   throttle_test
@@ -49,10 +49,10 @@ target_link_libraries(
 add_library(
   mechanical_speed
   mechanical_speed.h
-  mechanical_speed.cc)
+  mechanical_speed.cpp)
 add_executable(
   mechanical_speed_test
-  mechanical_speed_test.cc)
+  mechanical_speed_test.cpp)
 add_test(mechanical_speed_test mechanical_speed_test)
 target_link_libraries(
   mechanical_speed_test

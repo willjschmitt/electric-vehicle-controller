@@ -1,8 +1,5 @@
 #include "signal_processing/clarke_transformations.h"
 
-#include <exception>
-#include <vector>
-
 #include "signal_processing/math_constants.h"
 #include "signal_processing/angle_math.h"
 

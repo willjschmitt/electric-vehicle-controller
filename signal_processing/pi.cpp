@@ -1,9 +1,5 @@
 #include "signal_processing/pi.h"
 
-#include <chrono>
-#include <ctime>
-#include <iostream>
-
 namespace electric_vehicle {
 namespace signal_processing {
 
@@ -20,7 +16,7 @@ double ProportionalIntegralController::Solve(const double& input_actual,
   // Calculate error and PI component regulation actions.
   double error = input_reference - input_actual;
   const double q_proportional = error * gain_proportional_;
-  q_integral_ += error * gain_integral_ * DeltaTimestep().count();
+  q_integral_ += error * gain_integral_ * DeltaTimestep();
 
   // Apply limits with anti-windup logic by limiting the integral action.
   const double q_unlimited = q_integral_ + q_proportional;
@@ -39,7 +35,7 @@ double ProportionalIntegralController::Solve(const double& input_actual,
   return q_limited;
 }
 
-std::chrono::duration<double> ProportionalIntegralController::DeltaTimestep() {
+double ProportionalIntegralController::DeltaTimestep() const {
   return timer_->Time() - last_evaluation_time_;
 }
 

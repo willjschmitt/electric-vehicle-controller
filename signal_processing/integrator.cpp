@@ -12,7 +12,7 @@ double Integrator::Integrate(const double& input) {
     return 0.0;
   }
   
-  q_integral_ += input * DeltaTimestep().count();
+  q_integral_ += input * DeltaTimestep();
 
   // Apply limits with anti-windup logic by keeping the internal value within
   // the limits.
@@ -27,7 +27,7 @@ double Integrator::Integrate(const double& input) {
   return q_integral_;
 }
 
-std::chrono::duration<double> Integrator::DeltaTimestep() {
+double Integrator::DeltaTimestep() const {
   return timer_->Time() - last_evaluation_time_;
 }
 
@@ -44,7 +44,7 @@ double LoopingIntegrator::Integrate(const double& input) {
     return 0.0;
   }
   
-  q_integral_ += input * DeltaTimestep().count();
+  q_integral_ += input * DeltaTimestep();
 
   // Apply limits with anti-windup logic by keeping the internal value within
   // the limits.
@@ -59,7 +59,7 @@ double LoopingIntegrator::Integrate(const double& input) {
   return q_integral_;
 }
 
-std::chrono::duration<double> LoopingIntegrator::DeltaTimestep() {
+double LoopingIntegrator::DeltaTimestep() const {
   return timer_->Time() - last_evaluation_time_;
 }
 

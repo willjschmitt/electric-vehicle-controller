@@ -1,7 +1,5 @@
 #include "signal_processing/first_order_lag.h"
 
-#include <iostream>
-
 namespace electric_vehicle {
 namespace signal_processing {
 
@@ -15,14 +13,13 @@ double FirstOrderLag::Solve(const double& unfiltered) {
     return unfiltered;
   }
 
-  filtered_last_ += (unfiltered - filtered_last_)
-      * (DeltaTimestep().count() / tau_.count());
+  filtered_last_ += (unfiltered - filtered_last_) * (DeltaTimestep() / tau_);
 
   SampleLastEvaluationTime();
   return filtered_last_;
 }
 
-std::chrono::duration<double> FirstOrderLag::DeltaTimestep() {
+double FirstOrderLag::DeltaTimestep() const {
   return timer_->Time() - last_evaluation_time_;
 }
 

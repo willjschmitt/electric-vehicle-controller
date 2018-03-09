@@ -1,8 +1,6 @@
 #ifndef CONTROL__TIMER__H
 #define CONTROL__TIMER__H
 
-#include <chrono>
-
 namespace electric_vehicle {
 namespace control {
 
@@ -13,7 +11,7 @@ namespace control {
 class TimerInterface {
  public:
   // Provides the current time to use for discrete controls representations.
-  virtual const std::chrono::system_clock::time_point Time() = 0;
+  virtual const double Time() = 0;
 };
 
 
@@ -22,7 +20,7 @@ class AbsoluteTimer : public TimerInterface {
  public:
   AbsoluteTimer() {}
 
-  const std::chrono::system_clock::time_point Time() override;
+  const double Time() override;
 };
 
 // A Timer, which provides a time, which can be set discretely. For example in
@@ -34,15 +32,15 @@ class SettableTimer : public TimerInterface {
  public:
   SettableTimer() {}
   
-  const std::chrono::system_clock::time_point Time() override;
+  const double Time() override;
 
   // Sets the time to be returned for any subsequent calls to Time.
-  void SetTime(std::chrono::system_clock::time_point time);
+  void SetTime(const double& time);
 
  private:
   // The time, which has been set on the Timer, and will be returned anytime
   // Time() is invoked.
-  std::chrono::system_clock::time_point time_;
+  double time_;
 };
 
 // A timer, which will sample the current time whenever Sample is called and
@@ -51,7 +49,7 @@ class SamplingTimer : public TimerInterface {
  public:
   SamplingTimer() {}
 
-  const std::chrono::system_clock::time_point Time() override;
+  const double Time() override;
 
   // Samples the current time and uses it for any subsequent calls to Time().
   void SampleTime();
@@ -59,7 +57,7 @@ class SamplingTimer : public TimerInterface {
  private:
   // The time, which has been set on the Timer by SampleTime, which will be
   // returned anytime Time() is invoked.
-  std::chrono::system_clock::time_point time_;
+  double time_;
 };
 
 }  // namespace control

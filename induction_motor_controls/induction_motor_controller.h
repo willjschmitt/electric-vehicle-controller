@@ -1,8 +1,6 @@
 #ifndef INDUCTION_MOTOR_CONTROLS__INDUCTION_MOTOR_CONTROLLER__H
 #define INDUCTION_MOTOR_CONTROLS__INDUCTION_MOTOR_CONTROLLER__H
 
-#include <chrono>
-
 #include "control/current_regulator.h"
 #include "control/modulation.h"
 #include "control/timer.h"
@@ -30,7 +28,7 @@ class InductionMotorController {
           dc_voltage_sampler,
       const ::electric_vehicle::machines::InductionMachine& induction_machine,
       const ::electric_vehicle::control::CurrentRegulator& current_regulator,
-      const std::chrono::system_clock::duration core_controls_task_rate)
+      const double& core_controls_task_rate)
       : throttle_sampler_(throttle_sampler),
         speed_sampler_(speed_sampler),
         current_sampler_(current_sampler),

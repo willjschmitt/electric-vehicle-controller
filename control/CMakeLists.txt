@@ -10,13 +10,13 @@ enable_testing()
 add_library(
   current_regulator
   current_regulator.h
-  current_regulator.cc)
+  current_regulator.cpp)
 target_link_libraries(
   current_regulator
   pi)
 add_executable(
   current_regulator_test
-  current_regulator_test.cc)
+  current_regulator_test.cpp)
 add_test(current_regulator_test current_regulator_test)
 target_link_libraries (
   current_regulator_test
@@ -27,10 +27,10 @@ target_link_libraries (
 add_library(
   timer
   timer.h
-  timer.cc)
+  timer.cpp)
 add_executable(
   timer_test
-  timer_test.cc)
+  timer_test.cpp)
 add_test(timer_test timer_test)
 target_link_libraries(
   timer_test
@@ -40,13 +40,13 @@ target_link_libraries(
 add_library(
   modulation
   modulation.h
-  modulation.cc)
+  modulation.cpp)
 target_link_libraries(
   modulation
   clarke_transformations)
 add_executable(
   modulation_test
-  modulation_test.cc)
+  modulation_test.cpp)
 add_test(modulation_test modulation_test)
 target_link_libraries(
   modulation_test
@@ -57,7 +57,7 @@ target_link_libraries(
 add_library(
   stator_angle_estimator
   stator_angle_estimator.h
-  stator_angle_estimator.cc)
+  stator_angle_estimator.cpp)
 target_link_libraries(
   stator_angle_estimator
   clarke_transformations
@@ -65,7 +65,7 @@ target_link_libraries(
   timer)
 add_executable(
   stator_angle_estimator_test
-  stator_angle_estimator_test.cc)
+  stator_angle_estimator_test.cpp)
 add_test(stator_angle_estimator_test stator_angle_estimator_test)
 target_link_libraries(
   stator_angle_estimator_test

@@ -10,10 +10,10 @@ enable_testing()
 add_library(
   induction_machine
   induction_machine.h
-  induction_machine.cc)
+  induction_machine.cpp)
 add_executable(
   induction_machine_test
-  induction_machine_test.cc)
+  induction_machine_test.cpp)
 add_test(induction_machine_test induction_machine_test)
 target_link_libraries (
   induction_machine_test

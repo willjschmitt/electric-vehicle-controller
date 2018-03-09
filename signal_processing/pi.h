@@ -2,7 +2,6 @@
 #define SIGNAL_PROCESSING__PI__H_
 
 #include <cfloat>
-#include <chrono>
 
 #include "control/timer.h"
 
@@ -32,7 +31,7 @@ class ProportionalIntegralController {
 
  private:
   // Retrieves the delta time since the last time the instance was solved.
-  std::chrono::duration<double> DeltaTimestep();
+  double DeltaTimestep() const;
 
   // Samples and saves the curreent evaluation time as the last evaluation time.
   void SampleLastEvaluationTime();
@@ -51,7 +50,7 @@ class ProportionalIntegralController {
   double q_integral_;
 
   // Last time the block was solved. Not initialized until Solve is called.
-  std::chrono::system_clock::time_point last_evaluation_time_;
+  double last_evaluation_time_;
 
   // Boolean indicating if the instance has been solved at least once yet.
   // Used for intializting steps.
