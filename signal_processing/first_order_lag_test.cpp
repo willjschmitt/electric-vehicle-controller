@@ -17,7 +17,7 @@ using std::chrono::system_clock;
 TEST(FirstOrderLag, ReturnsInitalValue) {
   SettableTimer timer;
   system_clock::time_point current_time = system_clock::now();
-  const duration<double> kTau(10.0);
+  const double kTau = 10.0;
   FirstOrderLag first_order_lag(&timer, kTau);
   constexpr double kInputValue = 20.0;
   const double got = first_order_lag.Solve(kInputValue);
@@ -26,8 +26,8 @@ TEST(FirstOrderLag, ReturnsInitalValue) {
 
 TEST(FirstOrderLag, LagsAtTimeConstant) {
   SettableTimer timer;
-  system_clock::time_point current_time = system_clock::now();
-  const duration<double> kTau(1.0);
+  double current_time = 123.45;
+  const double kTau = 1.0;
   FirstOrderLag first_order_lag(&timer, kTau);
   constexpr double kInitialValue = 0.0;
   constexpr double kInputValue = 1.0;
@@ -38,7 +38,7 @@ TEST(FirstOrderLag, LagsAtTimeConstant) {
 
   // Make 10 small steps to the first time constant.
   for (unsigned int i = 0; i < 1000; i++) {
-    current_time += milliseconds(1);
+    current_time += 0.001;
     timer.SetTime(current_time);
     got = first_order_lag.Solve(kInputValue);
   }
@@ -47,7 +47,7 @@ TEST(FirstOrderLag, LagsAtTimeConstant) {
 
   // Make 10 small steps to the first time constant.
   for (unsigned int i = 0; i < 1000; i++) {
-    current_time += milliseconds(1);
+    current_time += 0.001;
     timer.SetTime(current_time);
     got = first_order_lag.Solve(kInputValue);
   }

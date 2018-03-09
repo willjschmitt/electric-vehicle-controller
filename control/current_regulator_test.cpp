@@ -23,7 +23,7 @@ TEST(CurrentRegulator, ControlsDirectAction) {
   const double kIntegralGain = 0.1;
   CurrentRegulator regulator(&timer, kProportionalGain, kIntegralGain);
   
-  system_clock::time_point start_time = system_clock::now();
+  double start_time = 123.45;
 
   // First regulation only initializes and will result in no output.
   timer.SetTime(start_time);
@@ -32,7 +32,7 @@ TEST(CurrentRegulator, ControlsDirectAction) {
   EXPECT_DOUBLE_EQ(voltage_reference1.direct, 0.0);
   EXPECT_DOUBLE_EQ(voltage_reference1.quadrature, 0.0);
 
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start_time + kOneSecond);
   const DirectQuadrature voltage_reference2 = regulator.Regulate(
       current_reference, current_measurement);
@@ -52,7 +52,7 @@ TEST(CurrentRegulator, ControlsQuadratureAction) {
   const double kIntegralGain = 0.1;
   CurrentRegulator regulator(&timer, kProportionalGain, kIntegralGain);
   
-  const system_clock::time_point start_time = system_clock::now();
+  const double start_time = 123.45;
 
   // First regulation only initializes and will result in no output.
   timer.SetTime(start_time);
@@ -61,7 +61,7 @@ TEST(CurrentRegulator, ControlsQuadratureAction) {
   EXPECT_DOUBLE_EQ(voltage_reference1.direct, 0.0);
   EXPECT_DOUBLE_EQ(voltage_reference1.quadrature, 0.0);
 
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start_time + kOneSecond);
   const DirectQuadrature voltage_reference2 = regulator.Regulate(
       current_reference, current_measurement);
@@ -81,7 +81,7 @@ TEST(CurrentRegulator, ControlsDualAction) {
   const double kIntegralGain = 0.1;
   CurrentRegulator regulator(&timer, kProportionalGain, kIntegralGain);
   
-  const system_clock::time_point start_time = system_clock::now();
+  const double start_time = 123.45;
 
   // First regulation only initializes and will result in no output.
   timer.SetTime(start_time);
@@ -90,7 +90,7 @@ TEST(CurrentRegulator, ControlsDualAction) {
   EXPECT_DOUBLE_EQ(voltage_reference1.direct, 0.0);
   EXPECT_DOUBLE_EQ(voltage_reference1.quadrature, 0.0);
 
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start_time + kOneSecond);
   const DirectQuadrature voltage_reference2 = regulator.Regulate(
       current_reference, current_measurement);

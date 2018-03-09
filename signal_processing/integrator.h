@@ -2,7 +2,6 @@
 #define SIGNAL_PROCESSING__INTEGRATOR__H
 
 #include <cfloat>
-#include <chrono>
 
 #include "control/timer.h"
 
@@ -31,7 +30,7 @@ class Integrator : public IntegratorInterface {
 
  private:
   // Retrieves the delta time since the last time the instance was solved.
-  std::chrono::duration<double> DeltaTimestep();
+  double DeltaTimestep() const;
 
   // Samples and saves the curreent evaluation time as the last evaluation time.
   void SampleLastEvaluationTime();
@@ -44,7 +43,7 @@ class Integrator : public IntegratorInterface {
   const double maximum_;
 
   // Last time the block was solved. Not initialized until Solve is called.
-  std::chrono::system_clock::time_point last_evaluation_time_;
+  double last_evaluation_time_;
 
   // Boolean indicating if the instance has been solved at least once yet.
   // Used for intializting steps.
@@ -73,7 +72,7 @@ class LoopingIntegrator : public IntegratorInterface {
 
  private:
   // Retrieves the delta time since the last time the instance was solved.
-  std::chrono::duration<double> DeltaTimestep();
+  double DeltaTimestep() const;
 
   // Samples and saves the curreent evaluation time as the last evaluation time.
   void SampleLastEvaluationTime();
@@ -86,7 +85,7 @@ class LoopingIntegrator : public IntegratorInterface {
   const double maximum_;
 
   // Last time the block was solved. Not initialized until Solve is called.
-  std::chrono::system_clock::time_point last_evaluation_time_;
+  double last_evaluation_time_;
 
   // Boolean indicating if the instance has been solved at least once yet.
   // Used for intializting steps.

@@ -1,7 +1,5 @@
 #include "control/stator_angle_estimator.h"
 
-#include <chrono>
-
 #include "gtest/gtest.h"
 
 namespace electric_vehicle {
@@ -9,12 +7,10 @@ namespace control {
 namespace {
 
 using ::electric_vehicle::signal_processing::k2Pi;
-using std::chrono::system_clock;
-using std::chrono::microseconds;
 
 TEST(StatorAngleEstimator, Estimates) {
   SettableTimer timer;
-  system_clock::time_point current_time = system_clock::now();
+  double current_time = 123.45;
   constexpr unsigned int kNumberOfPoles = 2;
   // Tau of 200ms = 0.040 / 0.2.
   constexpr double kRotorInductance = 0.040;  // Henries.
@@ -43,13 +39,13 @@ TEST(StatorAngleEstimator, Estimates) {
       kMechanicalSpeed, kDirectCurrentStator, kQuadratureCurrentStator);
   EXPECT_DOUBLE_EQ(estimated_rotor_flux_angle, 0.0);
 
-  current_time += microseconds(100);
+  current_time += 100E-6;
   timer.SetTime(current_time);
   estimated_rotor_flux_angle = estimator.Estimate(
       kMechanicalSpeed, kDirectCurrentStator, kQuadratureCurrentStator);
   EXPECT_NEAR(estimated_rotor_flux_angle, kRadPer100uS, 1E-4);
 
-  current_time += microseconds(100);
+  current_time += 100E-6;
   timer.SetTime(current_time);
   estimated_rotor_flux_angle = estimator.Estimate(
       kMechanicalSpeed, kDirectCurrentStator, kQuadratureCurrentStator);

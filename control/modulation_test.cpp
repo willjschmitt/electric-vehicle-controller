@@ -1,7 +1,6 @@
 #include "control/modulation.h"
 
 #include <cmath>
-#include <ctime>
 
 #include "gtest/gtest.h"
 #include "signal_processing/clarke_transformations.h"
@@ -17,7 +16,7 @@ using ::electric_vehicle::signal_processing::kSqrt3;
 using ::electric_vehicle::signal_processing::k2PiBy3;
 
 TEST(TwoLevelSineModulator, Modulates) {
-  const std::chrono::duration<double> kSwitchingPeriod(1.0);
+  const double kSwitchingPeriod = 1.0;
   TwoLevelSineModulator modulator(kSwitchingPeriod);
   const double kDCVoltage = 1000.0;
   const double kACMagnitude = 120.0;
@@ -28,12 +27,12 @@ TEST(TwoLevelSineModulator, Modulates) {
   const ModulationCommands modulation_commands = modulator.Modulate(
     kACReferences, kDCVoltage);
 
-  ASSERT_EQ(modulation_commands.at(Phase::A).size(), 2);
-  ASSERT_EQ(modulation_commands.at(Phase::B).size(), 2);
-  ASSERT_EQ(modulation_commands.at(Phase::C).size(), 2);
-  ASSERT_EQ(modulation_commands.at(Phase::A)[0].time.count(), 0.0);
-  ASSERT_EQ(modulation_commands.at(Phase::B)[0].time.count(), 0.0);
-  ASSERT_EQ(modulation_commands.at(Phase::C)[0].time.count(), 0.0);
+  ASSERT_EQ(modulation_commands.at(Phase::A).size(), (unsigned int)2);
+  ASSERT_EQ(modulation_commands.at(Phase::B).size(), (unsigned int)2);
+  ASSERT_EQ(modulation_commands.at(Phase::C).size(), (unsigned int)2);
+  ASSERT_EQ(modulation_commands.at(Phase::A)[0].time, 0.0);
+  ASSERT_EQ(modulation_commands.at(Phase::B)[0].time, 0.0);
+  ASSERT_EQ(modulation_commands.at(Phase::C)[0].time, 0.0);
 
   const double voltage_a = ModulationCommandsToVoltage(
       modulation_commands.at(Phase::A), kDCVoltage, kSwitchingPeriod);
@@ -76,9 +75,9 @@ class ModulationCommandsToVoltageTest
 TEST_P(ModulationCommandsToVoltageTest, CalculatesCorrectly75PercentDuty) {
   const double& kTimeToSwitch = GetParam().first;
   std::vector<ModulationCommand> commands;
-  const std::chrono::duration<double> kSwitchingPeriod(1.0);
-  const std::chrono::duration<double> kMidtimeSwitch(kTimeToSwitch);
-  const std::chrono::duration<double> kStartTimeSwitch(0.0);
+  const double kSwitchingPeriod = 1.0;
+  const double kMidtimeSwitch = kTimeToSwitch;
+  const double kStartTimeSwitch = 0.0;
   commands.push_back(ModulationCommand{SwitchOperation::HI, kStartTimeSwitch});
   commands.push_back(ModulationCommand{SwitchOperation::LOW, kMidtimeSwitch});
   const double kDCVoltage = 1200.0;

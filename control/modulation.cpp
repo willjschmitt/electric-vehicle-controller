@@ -1,8 +1,6 @@
 #include "control/modulation.h"
 
 #include <algorithm>
-#include <chrono>
-#include <iostream>
 #include <stdexcept>
 
 #include "signal_processing/clarke_transformations.h"
@@ -85,15 +83,14 @@ std::vector<ModulationCommand> TwoLevelSineModulator::DutyCycleToCommands(
   // TODO(#1): Add deadband to stay off below a certain duty cycle.
   ModulationCommand turn_on;
   turn_on.operation = SwitchOperation::HI;
-  turn_on.time = std::chrono::duration<double>(0.0);
+  turn_on.time = 0.0;
   commands.push_back(turn_on);
 
   // Turn the switch off at the duty cycle time.
   // TODO(#1): Add deadband to keep on above a certain duty cycle.
   ModulationCommand turn_off;
   turn_off.operation = SwitchOperation::LOW;
-  turn_off.time = std::chrono::duration<double>(
-      duty_cycle * switching_period_.count());
+  turn_off.time = duty_cycle * switching_period_;
   commands.push_back(turn_off);
 
   return commands;
@@ -114,19 +111,17 @@ double SwitchOperationToVoltage(const SwitchOperation& switch_operation,
 double ModulationCommandsToVoltage(
     const std::vector<ModulationCommand>& commands,
     const double& dc_voltage,
-    const std::chrono::duration<double>& switching_period) {
+    const double& switching_period) {
   double voltage = 0.0;
   for (unsigned int i = 0; i < commands.size() - 1; i++) {
-    const std::chrono::duration<double> delta_time
-        = commands[i + 1].time - commands[i].time;
+    const double delta_time = commands[i + 1].time - commands[i].time;
     const double switching_voltage = SwitchOperationToVoltage(
         commands[i].operation, dc_voltage);
     voltage += switching_voltage * (delta_time / switching_period);
   }
   const double last_voltage = SwitchOperationToVoltage(
       commands[commands.size()-1].operation, dc_voltage);
-  const std::chrono::duration<double> last_time
-      = switching_period - commands[commands.size()-1].time;
+  const double last_time = switching_period - commands[commands.size()-1].time;
   voltage += last_voltage * (last_time / switching_period);
 
   return voltage;

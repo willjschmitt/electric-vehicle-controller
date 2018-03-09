@@ -1,5 +1,6 @@
 #include "induction_motor_controls/induction_motor_controller.h"
 
+#include <chrono>
 #include <iostream>
 #include <memory>
 
@@ -26,9 +27,8 @@ using ::electric_vehicle::measurement::MechanicalSpeedInterface;
 using ::electric_vehicle::measurement::ThreePhaseMeasurementInterface;
 using ::electric_vehicle::measurement::ThrottleInterface;
 using ::electric_vehicle::signal_processing::ThreePhase;
-using ::std::chrono::microseconds;
 
-static const microseconds kCoreControlsTaskRate(100);
+static const double kCoreControlsTaskRate = 100E-6;
 
 class StubThrottle : public ThrottleInterface {
  public:
@@ -125,8 +125,8 @@ TEST_F(InductionMotorControllerTest, PerformanceTest) {
       = std::chrono::system_clock::now();
   const std::chrono::system_clock::duration total_time = end_time - start_time;
   const long long time_per_run
-      = std::chrono::duration_cast<std::chrono::microseconds>(total_time).count() / kNumberOfTimes;
-  EXPECT_LE(time_per_run, kCoreControlsTaskRate.count());
+      = std::chrono::duration_cast<std::chrono::seconds>(total_time).count() / kNumberOfTimes;
+  EXPECT_LE(time_per_run, kCoreControlsTaskRate);
   std::cout << "============PERFORMANCE============" << std::endl;
   std::cout << "Total time: " << total_time.count() << " seconds" << std::endl;
   std::cout << "Timer per run: " << time_per_run << " uSeconds" << std::endl;

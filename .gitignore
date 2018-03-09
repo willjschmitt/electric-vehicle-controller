@@ -47,6 +47,9 @@ CMakeCache.txt
 
 # Build directories
 Debug/
+build/
+debug/
+dist/
 
 # Microchip PIC Binaries
 *.elf
@@ -54,3 +57,8 @@ Debug/
 
 # Googletest files.
 *.pc
+
+# MPLAB Files
+nbproject/Makefile-*
+nbproject/Package-*
+nbproject/private/

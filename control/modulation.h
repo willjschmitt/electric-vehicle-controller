@@ -1,8 +1,6 @@
 #ifndef CONTROL__MODULATION__H
 #define CONTROL__MODULATION__H
 
-#include <chrono>
-#include <ctime>
 #include <map>
 #include <vector>
 
@@ -32,7 +30,7 @@ struct ModulationCommand {
   SwitchOperation operation;
 
   // Time to execute the action relative to the base of the switching period.
-  std::chrono::duration<double> time;
+  double time;
 };
 
 // A Map of phases to a vector of modulation commands to execute.
@@ -52,8 +50,7 @@ class TwoLevelModulatorInterface {
 // extend PWM range.
 class TwoLevelSineModulator : public TwoLevelModulatorInterface {
  public:
-  TwoLevelSineModulator(
-    const std::chrono::duration<double>& switching_period)
+  TwoLevelSineModulator(const double& switching_period)
     : switching_period_(switching_period) {}
 
   ModulationCommands Modulate(
@@ -62,7 +59,7 @@ class TwoLevelSineModulator : public TwoLevelModulatorInterface {
       const double& dc_voltage) const override;
 
  private:
-  const std::chrono::duration<double> switching_period_;
+  double switching_period_;
 
   // Converts a duty cycle into a +V, -V set of switching commands.
   std::vector<ModulationCommand> DutyCycleToCommands(
@@ -79,7 +76,7 @@ double SwitchOperationToVoltage(const SwitchOperation& switch_operation,
 double ModulationCommandsToVoltage(
     const std::vector<ModulationCommand>& commands,
     const double& dc_voltage,
-    const std::chrono::duration<double>& switching_period);
+    const double& switching_period);
 
 }  // namespace control
 }  // namespace electric_vehicle
