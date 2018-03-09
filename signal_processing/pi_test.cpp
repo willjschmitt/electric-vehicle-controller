@@ -1,7 +1,6 @@
 #include "signal_processing/pi.h"
 
 #include <cfloat>
-#include <chrono>
 
 #include "gtest/gtest.h"
 
@@ -10,15 +9,14 @@ namespace signal_processing {
 namespace {
 
 using electric_vehicle::control::SettableTimer;
-using std::chrono::duration;
-using std::chrono::system_clock;
-using std::chrono::seconds;
+
+constexpr double kSmallError = 1E-9;
 
 TEST(ProportionalIntegralController, Integrates) {
   const double kGainProportional = 0.0;
   const double kGainIntegral = 0.1;
   SettableTimer timer;
-  system_clock::time_point start = system_clock::now();
+  double start = 123.45;
   ProportionalIntegralController pi_controller(&timer, kGainProportional, kGainIntegral);
 
   const double kInputActual = 0.0;
@@ -27,26 +25,26 @@ TEST(ProportionalIntegralController, Integrates) {
   timer.SetTime(start);  
   const double integration1 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(integration1, 0.0);
+  EXPECT_NEAR(integration1, 0.0, kSmallError);
   
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start + kOneSecond);
   const double integration2 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(integration2, 0.1);
+  EXPECT_NEAR(integration2, 0.1, kSmallError);
 
-  const seconds kTwoSeconds(2);
+  const double kTwoSeconds = 2.0;
   timer.SetTime(start + kTwoSeconds);
   const double integration3 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(integration3, 0.2);
+  EXPECT_NEAR(integration3, 0.2, kSmallError);
 }
 
 TEST(ProportionalIntegralController, ProportionalAction) {
   const double kGainProportional = 0.1;
   const double kGainIntegral = 0.0;
   SettableTimer timer;
-  system_clock::time_point start = system_clock::now();
+  double start = 123.45;
   ProportionalIntegralController pi_controller(&timer, kGainProportional, kGainIntegral);
 
   const double kInputActual = 0.0;
@@ -55,19 +53,19 @@ TEST(ProportionalIntegralController, ProportionalAction) {
   timer.SetTime(start);  
   const double calculation1 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation1, 0.0);
+  EXPECT_NEAR(calculation1, 0.0, kSmallError);
   
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start + kOneSecond);
   const double calculation2 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation2, 0.1);
+  EXPECT_NEAR(calculation2, 0.1, kSmallError);
 
-  const seconds kTwoSeconds(2);
+  const double kTwoSeconds = 2.0;
   timer.SetTime(start + kTwoSeconds);
   const double calculation3 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation3, 0.1);
+  EXPECT_NEAR(calculation3, 0.1, kSmallError);
 }
 
 TEST(ProportionalIntegralController, LimitsMinimum) {
@@ -76,7 +74,7 @@ TEST(ProportionalIntegralController, LimitsMinimum) {
   const double kMinimum = 100.0;
   const double kMaximum = DBL_MAX;
   SettableTimer timer;
-  const system_clock::time_point start = system_clock::now();
+  const double start = 123.45;
   ProportionalIntegralController pi_controller(
       &timer, kGainProportional, kGainIntegral, kMinimum, kMaximum);
 
@@ -86,19 +84,19 @@ TEST(ProportionalIntegralController, LimitsMinimum) {
   timer.SetTime(start);  
   const double calculation1 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation1, 0.0);
+  EXPECT_NEAR(calculation1, 0.0, kSmallError);
   
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start + kOneSecond);
   const double calculation2 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation2, kMinimum);
+  EXPECT_NEAR(calculation2, kMinimum, kSmallError);
 
-  const seconds kTwoSeconds(2);
+  const double kTwoSeconds = 2.0;
   timer.SetTime(start + kTwoSeconds);
   const double calculation3 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation3, kMinimum);
+  EXPECT_NEAR(calculation3, kMinimum, kSmallError);
 }
 
 TEST(ProportionalIntegralController, LimitsMaximum) {
@@ -107,7 +105,7 @@ TEST(ProportionalIntegralController, LimitsMaximum) {
   const double kMinimum = -DBL_MAX;
   const double kMaximum = -100.0;
   SettableTimer timer;
-  const system_clock::time_point start = system_clock::now();
+  const double start = 123.45;
   ProportionalIntegralController pi_controller(
       &timer, kGainProportional, kGainIntegral, kMinimum, kMaximum);
 
@@ -117,19 +115,19 @@ TEST(ProportionalIntegralController, LimitsMaximum) {
   timer.SetTime(start);  
   const double calculation1 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation1, 0.0);
+  EXPECT_NEAR(calculation1, 0.0, kSmallError);
   
-  const seconds kOneSecond(1);
+  const double kOneSecond = 1.0;
   timer.SetTime(start + kOneSecond);
   const double calculation2 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation2, kMaximum);
+  EXPECT_NEAR(calculation2, kMaximum, kSmallError);
 
-  const seconds kTwoSeconds(2);
+  const double kTwoSeconds = 2.0;
   timer.SetTime(start + kTwoSeconds);
   const double calculation3 = pi_controller.Solve(
       kInputActual, kInputReference);
-  EXPECT_EQ(calculation3, kMaximum);
+  EXPECT_NEAR(calculation3, kMaximum, kSmallError);
 }
 
 TEST(ProportionalIntegralController,
@@ -139,8 +137,8 @@ TEST(ProportionalIntegralController,
   const double kMinimum = -0.2;
   const double kMaximum = DBL_MAX;
   SettableTimer timer;
-  system_clock::time_point current_time = system_clock::now();
-  const seconds kTimeStep(1);
+  double current_time = 123.45;
+  const double kTimeStep = 1.0;
   ProportionalIntegralController pi_controller(
       &timer, kGainProportional, kGainIntegral, kMinimum, kMaximum);
   
@@ -156,7 +154,7 @@ TEST(ProportionalIntegralController,
     timer.SetTime(current_time);
     calculation = pi_controller.Solve(kInputActual, input_reference);
   }
-  EXPECT_EQ(calculation, -0.2);
+  EXPECT_NEAR(calculation, -0.2, kSmallError);
 
   // Reverse direction, and we should see the regulator immediately back off
   // the minimum, if it correctly avoided windup.
@@ -164,7 +162,7 @@ TEST(ProportionalIntegralController,
   current_time += kTimeStep;
   timer.SetTime(current_time);
   calculation = pi_controller.Solve(kInputActual, input_reference);
-  EXPECT_EQ(calculation, -0.1);
+  EXPECT_NEAR(calculation, -0.1, kSmallError);
 
 }
 
@@ -175,8 +173,8 @@ TEST(ProportionalIntegralController,
   const double kMinimum = -DBL_MAX;
   const double kMaximum = 0.2;
   SettableTimer timer;
-  system_clock::time_point current_time = system_clock::now();
-  const seconds kTimeStep(1);
+  double current_time = 123.45;
+  const double kTimeStep = 1.0;
   ProportionalIntegralController pi_controller(
       &timer, kGainProportional, kGainIntegral, kMinimum, kMaximum);
   
@@ -192,7 +190,7 @@ TEST(ProportionalIntegralController,
     timer.SetTime(current_time);
     calculation = pi_controller.Solve(kInputActual, input_reference);
   }
-  EXPECT_EQ(calculation, +0.2);
+  EXPECT_NEAR(calculation, +0.2, kSmallError);
 
   // Reverse direction, and we should see the regulator immediately back off
   // the maximum, if it correctly avoided windup.
@@ -200,7 +198,7 @@ TEST(ProportionalIntegralController,
   current_time += kTimeStep;
   timer.SetTime(current_time);
   calculation = pi_controller.Solve(kInputActual, input_reference);
-  EXPECT_EQ(calculation, +0.1);
+  EXPECT_NEAR(calculation, +0.1, kSmallError);
 
 }
 
