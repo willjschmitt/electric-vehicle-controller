@@ -41,14 +41,14 @@
 #pragma config WDTPS = PS1048576        // Watchdog Timer Postscaler (1:1048576)
 #pragma config WDTSPGM = STOP           // Watchdog Timer Stop During Flash Programming (WDT stops during Flash programming)
 #pragma config WINDIS = NORMAL          // Watchdog Timer Window Mode (Watchdog Timer is in non-Window mode)
-#pragma config FWDTEN = ON              // Watchdog Timer Enable (WDT Enabled)
+#pragma config FWDTEN = OFF             // Watchdog Timer Enable (WDT Enabled)
 #pragma config FWDTWINSZ = WINSZ_25     // Watchdog Timer Window Size (Window size is 25%)
 #pragma config DMTCNT = DMT31           // Deadman Timer Count Selection (2^31 (2147483648))
-#pragma config FDMTEN = ON              // Deadman Timer Enable (Deadman Timer is enabled)
+#pragma config FDMTEN = OFF             // Deadman Timer Enable (Deadman Timer is enabled)
 
 // DEVCFG0
 #pragma config DEBUG = OFF              // Background Debugger Enable (Debugger is disabled)
-#pragma config JTAGEN = ON              // JTAG Enable (JTAG Port Enabled)
+#pragma config JTAGEN = OFF             // JTAG Enable (JTAG Port Enabled)
 #pragma config ICESEL = ICS_PGx1        // ICE/ICD Comm Channel Select (Communicate on PGEC1/PGED1)
 #pragma config TRCEN = ON               // Trace Enable (Trace features in the CPU are enabled)
 #pragma config BOOTISA = MIPS32         // Boot ISA Selection (Boot code and Exception code is MIPS32)
