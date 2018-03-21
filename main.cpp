@@ -24,7 +24,7 @@ namespace {
 constexpr double kSystemFrequencyHertz = 80e6;
 constexpr double kSystemTickSeconds = 1.0 / kSystemFrequencyHertz;
 
-constexpr double kTimer2Seconds = 200e-6;
+constexpr double kTimer2Seconds = 400e-6;
 
 // Sets up PORTC.6 and PORTC.7 (RPC6 and RPC7) as output for debugging. These
 // pins is exposed on the development board.
