@@ -72,6 +72,11 @@ volatile InductionMachine* induction_machine;
 volatile CurrentRegulator* current_regulator;
 volatile InductionMotorController* controller;
 
+// Executes the core control loops. Should be executed at the Timer2 frequency.
+void RunControls() {
+  ((InductionMotorController*)controller)->CoreControlsTask();
+}
+
 }  // namespace
 
 // Interrupt handlers are outside of namespaces, since they need to be in the
@@ -84,6 +89,7 @@ _T2Interrupt(void)
 {
   IFS0bits.T2IF = 0;
   PORTCINV = 0x1 << 6;
+  RunControls();
   PORTCINV = 0x1 << 7;
 }
 
