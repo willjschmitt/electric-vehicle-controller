@@ -26,10 +26,11 @@ constexpr double kSystemTickSeconds = 1.0 / kSystemFrequencyHertz;
 
 constexpr double kTimer2Seconds = 200e-6;
 
-// Sets up PORTC.6 (RPC6) as output for debugging. This pin is exposed on the
-// development board.
+// Sets up PORTC.6 and PORTC.7 (RPC6 and RPC7) as output for debugging. These
+// pins is exposed on the development board.
 void ConfigureIO() {
   TRISCbits.TRISC6 = 0;
+  TRISCbits.TRISC7 = 0;
 }
 
 // Sets up Timer2 as a 16bit timer with interrupts at a frequency of
@@ -71,6 +72,7 @@ _T2Interrupt(void)
 {
   IFS0bits.T2IF = 0;
   PORTCINV = 0x1 << 6;
+  PORTCINV = 0x1 << 7;
 }
 
 int main(int argc, char** argv) {
