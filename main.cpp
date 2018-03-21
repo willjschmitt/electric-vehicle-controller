@@ -60,6 +60,18 @@ void ConfigureTimer2() {
   T2CONbits.ON = 1;
 }
 
+// Controller variables. All are pointers but many would otherwise be declared
+// as const. This will allow global access with initialization in the main
+// function.
+volatile SamplingTimer* timer;
+volatile PIC32ThrottleSampler* throttle_sampler;
+volatile PIC32MechanicalSpeedSampler* speed_sampler;
+volatile PIC32ThreePhaseCurrentSampler* current_sampler;
+volatile PIC32DcVoltageSampler* dc_voltage_sampler;
+volatile InductionMachine* induction_machine;
+volatile CurrentRegulator* current_regulator;
+volatile InductionMotorController* controller;
+
 }  // namespace
 
 // Interrupt handlers are outside of namespaces, since they need to be in the
@@ -79,11 +91,11 @@ int main(int argc, char** argv) {
   ConfigureIO();
   ConfigureTimer2();
 
-  SamplingTimer timer;
-  const PIC32ThrottleSampler throttle_sampler;
-  const PIC32MechanicalSpeedSampler speed_sampler;
-  const PIC32ThreePhaseCurrentSampler current_sampler;
-  const PIC32DcVoltageSampler dc_voltage_sampler;
+  timer = new SamplingTimer();
+  throttle_sampler = new PIC32ThrottleSampler();
+  speed_sampler = new PIC32MechanicalSpeedSampler();
+  current_sampler = new PIC32ThreePhaseCurrentSampler();
+  dc_voltage_sampler = new PIC32DcVoltageSampler();
   
   constexpr double kMagnetizingInductance = 0.0;
   constexpr double kStatorInductance = 0.0;
@@ -91,7 +103,7 @@ int main(int argc, char** argv) {
   constexpr double kRotorInductance = 0.0;
   constexpr double kRotorResistance = 0.0;
   constexpr unsigned int kNumberOfPoles = 2;
-  const InductionMachine induction_machine(
+  induction_machine = new InductionMachine(
       kMagnetizingInductance, kStatorInductance, kStatorResistance,
       kRotorInductance, kRotorResistance, kNumberOfPoles);
   
@@ -101,17 +113,21 @@ int main(int argc, char** argv) {
   constexpr double kCurrentRegulatorDirectMaximum = +1.0;
   constexpr double kCurrentRegulatorQuadratureMinimum = -1.0;
   constexpr double kCurrentRegulatorQuadratureMaximum = +1.0;
-  const CurrentRegulator current_regulator(
-      &timer, kCurrentRegulatorProportionalGain,
+  current_regulator = new CurrentRegulator(
+      (SamplingTimer*)timer, kCurrentRegulatorProportionalGain,
       kCurrentRegulatorIntegralGain, kCurrentRegulatorDirectMinimum,
       kCurrentRegulatorDirectMaximum, kCurrentRegulatorQuadratureMinimum,
       kCurrentRegulatorQuadratureMaximum);
   
-  constexpr double kCoreControlsTaskRate = 200E-6;
+  constexpr double kCoreControlsTaskRate = kTimer2Seconds;
   
-  InductionMotorController controller(
-      &timer, &throttle_sampler, &speed_sampler, &current_sampler,
-      &dc_voltage_sampler, induction_machine, current_regulator,
+  controller = new InductionMotorController(
+      (SamplingTimer*)timer, (PIC32ThrottleSampler*)throttle_sampler,
+      (PIC32MechanicalSpeedSampler*)speed_sampler,
+      (PIC32ThreePhaseCurrentSampler*)current_sampler,
+      (PIC32DcVoltageSampler*)dc_voltage_sampler,
+      *(InductionMachine*)induction_machine,
+      *(CurrentRegulator*)current_regulator,
       kCoreControlsTaskRate);
     
   while(1) {
