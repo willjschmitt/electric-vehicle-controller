@@ -21,7 +21,7 @@ using ::electric_vehicle::measurement::PIC32ThrottleSampler;
 namespace {
 
 // System is configured to 100MHz (10nS ticks).
-constexpr double kSystemFrequencyHertz = 100e6;
+constexpr double kSystemFrequencyHertz = 80e6;
 constexpr double kSystemTickSeconds = 1.0 / kSystemFrequencyHertz;
 
 constexpr double kTimer2Seconds = 200e-6;

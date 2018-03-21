@@ -15,7 +15,7 @@
 #pragma config FPLLIDIV = DIV_1         // System PLL Input Divider (1x Divider)
 #pragma config FPLLRNG = RANGE_5_10_MHZ // System PLL Input Range (5-10 MHz Input)
 #pragma config FPLLICLK = PLL_FRC       // System PLL Input Clock Selection (FRC is input to the System PLL)
-#pragma config FPLLMULT = MUL_50        // System PLL Multiplier (PLL Multiply by 50)
+#pragma config FPLLMULT = MUL_40        // System PLL Multiplier (PLL Multiply by 50)
 #pragma config FPLLODIV = DIV_2         // System PLL Output Clock Divider (2x Divider)
 
 // Turn off timers and features not used.
