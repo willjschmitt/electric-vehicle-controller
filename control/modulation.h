@@ -63,10 +63,6 @@ class TwoLevelSineModulator : public TwoLevelModulatorInterface {
 
  private:
   double switching_period_;
-
-  // Converts a duty cycle into a +V, -V set of switching commands.
-  std::vector<ModulationCommand> DutyCycleToCommands(
-    const double& duty_cycle) const;
 };
 
 // Converts a SwitchOperation into's it's generated voltage, using the middle
