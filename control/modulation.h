@@ -1,6 +1,7 @@
 #ifndef CONTROL__MODULATION__H
 #define CONTROL__MODULATION__H
 
+#include <array>
 #include <map>
 #include <vector>
 
@@ -33,8 +34,10 @@ struct ModulationCommand {
   double time;
 };
 
-// A Map of phases to a vector of modulation commands to execute.
-using ModulationCommands = std::map<Phase, std::vector<ModulationCommand>>;
+// A Map of phases to a size-6 array of modulation commands to execute. Size is
+// set to 6 to support turn on/off in one cycle and then 3 cycles (finishing
+// cycle, current cycle, next cycle).
+using ModulationCommands = std::map<Phase, std::array<ModulationCommand, 6>>;
 
 // Modulates a three-phase instantaneous voltage reference into modulation
 // commands to turn IGBTs on and off
