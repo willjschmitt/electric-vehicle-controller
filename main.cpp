@@ -21,10 +21,11 @@ using ::electric_vehicle::measurement::PIC32ThrottleSampler;
 namespace {
 
 // System is configured to 100MHz (10nS ticks).
-constexpr double kSystemFrequencyHertz = 80e6;
+constexpr double kSystemFrequencyHertz = 120e6;
+constexpr double kPeripheralFrequencyHertz = kSystemFrequencyHertz / 2.0;
 constexpr double kSystemTickSeconds = 1.0 / kSystemFrequencyHertz;
 
-constexpr double kTimer2Seconds = 400e-6;
+constexpr double kTimer2Seconds = 250e-6;
 
 // Sets up PORTC.6 and PORTC.7 (RPC6 and RPC7) as output for debugging. These
 // pins is exposed on the development board.
@@ -44,7 +45,7 @@ void ConfigureTimer2() {
   // kTimer2Seconds.
   T2CONbits.TCKPS = 0x0;
   T2CONbits.T32 = 0;
-  PR2 = (unsigned int) (kTimer2Seconds * kSystemFrequencyHertz);
+  PR2 = (unsigned int) (kTimer2Seconds * kPeripheralFrequencyHertz);
 
   // Set Timer 2 Priorities to 2, 0.
   IPC2bits.T2IP = 2;
