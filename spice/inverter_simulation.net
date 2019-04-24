@@ -1,45 +1,40 @@
 * F:\William\Documents\electric-vehicle-controller\spice\inverter_simulation.asc
-XU2 Vm_u Vm_v Vm_w Vm+ Vm- NC_01 NC_02 InductionMotor R1=1 R2=1 M=0.1 Ll1=1m Ll2=1m Dm=10m Jm=10m Np=2
-S1 N009 V_DC UP 0 SW
-D1 N009 V_DC D
-S2 0 N009 UN 0 SW
-D2 0 N009 D
-S3 N010 V_DC VP 0 SW
-D3 N010 V_DC D
-S4 0 N010 VN 0 SW
-D4 0 N010 D
-S5 N011 V_DC WP 0 SW
-D5 N011 V_DC D
-S6 0 N011 WN 0 SW
-D6 0 N011 D
+XU2 Vm_u Vm_v Vm_w Vm+ Vm- NC_01 NC_02 InductionMotor R1={R_motor1} R2={R_motor2} M={L_motorm} Ll1={L_motorl1} Ll2={L_motorl2} Dm={D_motor} Jm={J_motor} Np={N_poles_motor}
+S1 N008 V_DC UP 0 SW
+D1 N008 V_DC D
+S2 0 N008 UN 0 SW
+D2 0 N008 D
+S3 N009 V_DC VP 0 SW
+D3 N009 V_DC D
+S4 0 N009 VN 0 SW
+D4 0 N009 D
+S5 N010 V_DC WP 0 SW
+D5 N010 V_DC D
+S6 0 N010 WN 0 SW
+D6 0 N010 D
 V1 V_DC 0 600
 H1 w_motor 0 w_motor_i 1
-XU19 estimated_stator_angle N007 Integral T=-1 Y0=0
-V§w_motor_i Vm+ N012 0
-V§i_u N009 Vm_u 0
-V§i_v N010 Vm_v 0
-V§i_w N011 Vm_w 0
-H2 N001 0 i_u 1
-H3 N003 0 i_v 1
-H4 N006 0 i_w 1
-V6 N007 0 377
-V§THROTTLE N008 0 5
-XU21 quadrature_current_reference N008 Proportional K=1
-XU30 voltage_reference_direct voltage_reference_quadrature N015 N013 N014 xyRotation
-XU31 N015 estimated_stator_angle Proportional K=-1
-XU32 N013 N014 voltage_reference_u voltage_reference_v voltage_reference_w ab-uvwTransformation
-XU33 N002 N001 1stOrderLag K=1 T=0.0005
-XU34 N004 N003 1stOrderLag K=1 T=0.0005
-XU35 N005 N006 1stOrderLag K=1 T=0.0005
-R1 N012 Vm- .25
-XX3 direct_current_reference current_feedback_d quadrature_current_reference current_feedback_q voltage_reference_direct voltage_reference_quadrature current_regulator
-XX1 N002 N004 N005 estimated_stator_angle current_feedback_d current_feedback_q park_transformation
+XU19 estimated_stator_angle N004 Integral T=-1 Y0=0
+V§w_motor_i Vm+ N011 0
+V6 N004 0 377
+V§THROTTLE N005 0 5
+XU21 quadrature_current_reference N005 Proportional K=1
+XU30 voltage_reference_direct voltage_reference_quadrature N012 N006 N007 xyRotation
+XU31 N012 estimated_stator_angle Proportional K=-1
+XU32 N006 N007 voltage_reference_u voltage_reference_v voltage_reference_w ab-uvwTransformation
+R1 N011 Vm- .25
+XX3 direct_current_reference current_feedback_d quadrature_current_reference current_feedback_q voltage_reference_direct voltage_reference_quadrature current_regulator params: Kp=1 Ki=10000
+XX1 N001 N002 N003 estimated_stator_angle current_feedback_d current_feedback_q park_transformation
 XX2 voltage_reference_u voltage_reference_v voltage_reference_w UP UN VP VN WP WN V_DC two_level_sine_modulator
+XU1 N008 Vm_u i_m_u CurrentSensor
+XU3 N009 Vm_v i_m_v CurrentSensor
+XU4 N010 Vm_w i_m_w CurrentSensor
+XX4 i_m_u i_m_v i_m_w N001 N002 N003 pic32_three_phase_current_sampler
 
 * block symbol definitions
 .subckt current_regulator current_ref_d current_fbk_d current_ref_q current_fbk_q voltage_ref_d voltage_ref_q
-XX1 current_ref_d current_fbk_d voltage_ref_d pi params: Kp={Kp};Ki={Ki}
-XX2 current_ref_q current_fbk_q voltage_ref_q pi params: Kp={Kp};Ki={Ki}
+XX1 current_ref_d current_fbk_d voltage_ref_d pi params: Kp={Kp} Ki={Ki}
+XX2 current_ref_q current_fbk_q voltage_ref_q pi params: Kp={Kp} Ki={Ki}
 .param Kp=1
 .param Ki=1
 .ends current_regulator
@@ -70,24 +65,45 @@ XU16 N010 N009 addk k=0.5
 .param Tdead=1u
 .ends two_level_sine_modulator
 
+.subckt pic32_three_phase_current_sampler i_raw_a i_raw_b i_raw_c i_a i_b i_c
+XU1 i_a i_raw_a Proportional K=1
+XU2 i_b i_raw_b Proportional K=1
+XU3 i_c i_raw_c Proportional K=1
+.ends pic32_three_phase_current_sampler
+
 .subckt pi SP PV OUT
-XU1 N002 N001 Proportional K={Kp}
-XU2 N003 N001 LimitedIntegral T={1/Ki} Y0=0 Ymin=-1T Ymax=1T
+XU1 Qp N001 Proportional K={Kp}
 XU3 N001 SP PV sub
-XU4 OUT N002 N003 add
+XU4 OUT Qp N002 add
+XU5 N002 N001 Qi_min Qi_max DynamicallyLimitedIntegral T={1/Ki} Y0=0
+XU2 Qi_max N003 Qp sub
+XU6 Qi_min N004 Qp sub
+XU7 N003 Constant K={max}
+XU8 N004 Constant K={min}
 .param Kp=1
 .param Ki=1
+.param max=100
+.param min=-100
 .ends pi
 
 .model D D
 .lib F:\William\Documents\LTspiceXVII\lib\cmp\standard.dio
-.tran 1 startup
+.tran 200m startup
 .model SW SW(Ron=1 Roff=1Meg Vt=0.5)
 .model D D(Ron=.1 Roff=1Meg Vfwd=.4)
+.param R_motor1=1
+.param R_motor2=1
+.param L_motorm=0.1
+.param L_motorl1=1m
+.param L_motorl2=1m
+.param D_motor=10m
+.param J_motor=10m
+.param N_poles_motor=2
 .lib LTspiceControlLibrary\CoordinateTransformations.lib
 .lib LTspiceControlLibrary\Math.lib
 .lib LTspiceControlLibrary\Motors.lib
 .lib LTspiceControlLibrary\PulseModulations.lib
+.lib LTspiceControlLibrary\Sensors.lib
 .lib LTspiceControlLibrary\TransferFunctions.lib
 .backanno
 .end
