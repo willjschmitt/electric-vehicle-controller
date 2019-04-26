@@ -14,11 +14,9 @@ S6 0 N008 WN 0 SW
 D6 0 N008 D
 V1 V_DC 0 600
 H1 w_motor 0 w_motor_i 1
-XU19 estimated_stator_angle N004 Integral T=-1 Y0=0
+XU19 estimated_stator_angle N005 Integral T=-1 Y0=0
 V§w_motor_i Vm+ N009 0
-V6 N004 0 377
-V§THROTTLE N005 0 5
-XU21 quadrature_current_reference N005 Proportional K=1
+V6 N005 0 377
 R1 N009 Vm- .25
 XX3 direct_current_reference current_feedback_d quadrature_current_reference current_feedback_q voltage_reference_direct voltage_reference_quadrature current_regulator params: Kp=1 Ki=10000
 XX1 N001 N002 N003 estimated_stator_angle current_feedback_d current_feedback_q park_transformation
@@ -30,6 +28,9 @@ XX4 i_m_u i_m_v i_m_w N001 N002 N003 pic32_three_phase_current_sampler
 XX5 voltage_reference_u voltage_reference_v voltage_reference_w estimated_stator_angle v_ref_d_lim v_ref_q_lim inverse_park_transformation
 XU5 voltage_reference_direct voltage_reference_quadrature N010 v_ref_d_lim v_ref_q_lim xy_limit
 XU6 N010 Constant K=100
+XX6 N004 throttle pic32_throttle_sampler
+XU7 N004 Constant K=5
+XX7 throttle quadrature_current_reference torque_controller
 
 * block symbol definitions
 .subckt current_regulator current_ref_d current_fbk_d current_ref_q current_fbk_q voltage_ref_d voltage_ref_q
@@ -84,6 +85,14 @@ XU2 x1 y1 N001 xy_amplitude
 XU3 N002 max N001 div
 XU4 N003 N002 N004 min
 .ends xy_limit
+
+.subckt pic32_throttle_sampler pos out
+XU1 out pos Proportional K=1
+.ends pic32_throttle_sampler
+
+.subckt torque_controller torque_ref iq_ref
+XU1 iq_ref torque_ref Proportional K=1
+.ends torque_controller
 
 .subckt pi SP PV OUT
 XU1 Qp N001 Proportional K={Kp}
