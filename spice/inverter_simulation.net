@@ -1,36 +1,34 @@
 * F:\William\Documents\electric-vehicle-controller\spice\inverter_simulation.asc
 XU2 Vm_u Vm_v Vm_w Vm+ Vm- NC_01 NC_02 InductionMotor R1={R_motor1} R2={R_motor2} M={L_motorm} Ll1={L_motorl1} Ll2={L_motorl2} Dm={D_motor} Jm={J_motor} Np={N_poles_motor}
-S1 N006 V_DC UP 0 SW
-D1 N006 V_DC D
-S2 0 N006 UN 0 SW
-D2 0 N006 D
-S3 N007 V_DC VP 0 SW
-D3 N007 V_DC D
-S4 0 N007 VN 0 SW
-D4 0 N007 D
-S5 N008 V_DC WP 0 SW
-D5 N008 V_DC D
-S6 0 N008 WN 0 SW
-D6 0 N008 D
+S1 N005 V_DC UP 0 SW
+D1 N005 V_DC D
+S2 0 N005 UN 0 SW
+D2 0 N005 D
+S3 N006 V_DC VP 0 SW
+D3 N006 V_DC D
+S4 0 N006 VN 0 SW
+D4 0 N006 D
+S5 N007 V_DC WP 0 SW
+D5 N007 V_DC D
+S6 0 N007 WN 0 SW
+D6 0 N007 D
 V1 V_DC 0 600
-H1 w_motor 0 w_motor_i 1
-XU19 estimated_stator_angle N005 Integral T=-1 Y0=0
-V§w_motor_i Vm+ N009 0
-V6 N005 0 377
-R1 N009 Vm- .25
+R1 N008 Vm- .25
 XX3 direct_current_reference current_feedback_d quadrature_current_reference current_feedback_q voltage_reference_direct voltage_reference_quadrature current_regulator params: Kp=1 Ki=10000
 XX1 N001 N002 N003 estimated_stator_angle current_feedback_d current_feedback_q park_transformation
 XX2 voltage_reference_u voltage_reference_v voltage_reference_w UP UN VP VN WP WN V_DC two_level_sine_modulator
-XU1 N006 Vm_u i_m_u CurrentSensor
-XU3 N007 Vm_v i_m_v CurrentSensor
-XU4 N008 Vm_w i_m_w CurrentSensor
+XU1 N005 Vm_u i_m_u CurrentSensor
+XU3 N006 Vm_v i_m_v CurrentSensor
+XU4 N007 Vm_w i_m_w CurrentSensor
 XX4 i_m_u i_m_v i_m_w N001 N002 N003 pic32_three_phase_current_sampler
 XX5 voltage_reference_u voltage_reference_v voltage_reference_w estimated_stator_angle v_ref_d_lim v_ref_q_lim inverse_park_transformation
-XU5 voltage_reference_direct voltage_reference_quadrature N010 v_ref_d_lim v_ref_q_lim xy_limit
-XU6 N010 Constant K=100
+XU5 voltage_reference_direct voltage_reference_quadrature N009 v_ref_d_lim v_ref_q_lim xy_limit
+XU6 N009 Constant K=100
 XX6 N004 throttle pic32_throttle_sampler
 XU7 N004 Constant K=5
 XX7 throttle quadrature_current_reference torque_controller
+XU8 Vm+ N008 w_motor CurrentSensor
+XX8 w_motor direct_current_reference quadrature_current_reference estimated_stator_angle stator_angle_estimator
 
 * block symbol definitions
 .subckt current_regulator current_ref_d current_fbk_d current_ref_q current_fbk_q voltage_ref_d voltage_ref_q
@@ -93,6 +91,14 @@ XU1 out pos Proportional K=1
 .subckt torque_controller torque_ref iq_ref
 XU1 iq_ref torque_ref Proportional K=1
 .ends torque_controller
+
+.subckt stator_angle_estimator w_motor id_ref iq_ref angle_stator
+XU1 N001 Constant K=377
+XU2 angle_stator N001 Integral T=-1 Y0=0
+.param poles=2
+.param l_rotor=1
+.param r_rotor=1
+.ends stator_angle_estimator
 
 .subckt pi SP PV OUT
 XU1 Qp N001 Proportional K={Kp}
