@@ -1,0 +1,13 @@
+Version 4
+SymbolType BLOCK
+LINE Normal 128 0 144 0
+LINE Normal -192 0 -208 0
+RECTANGLE Normal 128 32 -192 -16
+TEXT 0 -5 Center 2 DC VOLTAGE
+TEXT 0 15 Center 2 SAMPLER
+PIN -208 0 LEFT 20
+PINATTR PinName vdc_raw
+PINATTR SpiceOrder 1
+PIN 144 0 RIGHT 20
+PINATTR PinName vdc
+PINATTR SpiceOrder 2

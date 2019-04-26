@@ -62,3 +62,7 @@ dist/
 nbproject/Makefile-*
 nbproject/Package-*
 nbproject/private/
+
+# LTSpice Files
+*.raw
+*.log

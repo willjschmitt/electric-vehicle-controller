@@ -1,0 +1,152 @@
+* F:\William\Documents\electric-vehicle-controller\spice\inverter_simulation.asc
+XU2 Vm_u Vm_v Vm_w Vm+ Vm- NC_01 NC_02 InductionMotor R1={R_motor1} R2={R_motor2} M={L_motorm} Ll1={L_motorl1} Ll2={L_motorl2} Dm={D_motor} Jm={J_motor} Np={N_poles_motor}
+S1 N005 V_DC_LINK UP 0 SW
+D1 N005 V_DC_LINK D
+S2 0 N005 UN 0 SW
+D2 0 N005 D
+S3 N006 V_DC_LINK VP 0 SW
+D3 N006 V_DC_LINK D
+S4 0 N006 VN 0 SW
+D4 0 N006 D
+S5 N007 V_DC_LINK WP 0 SW
+D5 N007 V_DC_LINK D
+S6 0 N007 WN 0 SW
+D6 0 N007 D
+V1 V_DC_LINK 0 600
+R1 N008 Vm- .25
+XX3 direct_current_reference current_feedback_d quadrature_current_reference current_feedback_q voltage_reference_direct voltage_reference_quadrature current_regulator params: Kp=1 Ki=10000
+XX1 N001 N002 N003 estimated_stator_angle current_feedback_d current_feedback_q park_transformation
+XX2 voltage_reference_u voltage_reference_v voltage_reference_w UP UN VP VN WP WN voltage_dc two_level_sine_modulator
+XU1 N005 Vm_u i_m_u CurrentSensor
+XU3 N006 Vm_v i_m_v CurrentSensor
+XU4 N007 Vm_w i_m_w CurrentSensor
+XX4 i_m_u i_m_v i_m_w N001 N002 N003 pic32_three_phase_current_sampler
+XX5 voltage_reference_u voltage_reference_v voltage_reference_w estimated_stator_angle v_ref_d_lim v_ref_q_lim inverse_park_transformation
+XU5 voltage_reference_direct voltage_reference_quadrature N009 v_ref_d_lim v_ref_q_lim xy_limit
+XU6 N009 Constant K=100
+XX6 N004 throttle pic32_throttle_sampler
+XU7 N004 Constant K=5
+XX7 throttle quadrature_current_reference torque_controller
+XU8 Vm+ N008 w_motor CurrentSensor
+XX8 w_motor direct_current_reference quadrature_current_reference estimated_stator_angle stator_angle_estimator
+XX9 V_DC_LINK voltage_dc pic32_dc_voltage_sampler
+
+* block symbol definitions
+.subckt current_regulator current_ref_d current_fbk_d current_ref_q current_fbk_q voltage_ref_d voltage_ref_q
+XX1 current_ref_d current_fbk_d voltage_ref_d pi params: Kp={Kp} Ki={Ki}
+XX2 current_ref_q current_fbk_q voltage_ref_q pi params: Kp={Kp} Ki={Ki}
+.param Kp=1
+.param Ki=1
+.ends current_regulator
+
+.subckt park_transformation u v w theta d q
+XU1 u v w N001 N002 NC_01 uvw-aboTransformation
+XU2 N001 N002 theta d q xyRotation
+.ends park_transformation
+
+.subckt two_level_sine_modulator mod_ref_a mod_ref_b mod_ref_c ap an bp bn cp cn dc_voltage
+XU1 P001 mod_ref_a mod_ref_b max
+XU2 N011 P001 mod_ref_c max
+XU3 P002 mod_ref_a mod_ref_b min
+XU4 N013 P002 mod_ref_c min
+XU5 N001 mod_ref_a N007 sub
+XU6 N004 mod_ref_b N007 sub
+XU7 N008 mod_ref_c N007 sub
+XU8 N012 N011 N013 add
+XU9 N007 N012 Proportional K=0.5
+XU10 N002 N001 dc_voltage div
+XU12 N005 N004 dc_voltage div
+XU13 N009 N008 dc_voltage div
+XU11 N003 N006 N010 ap an bp bn cp cn 3PhaseComplementaryPWM Vin1=0 Vin2=1 Tperiod={Tpwm} Tdead={Tdead} Tdelay=0 tripdt=1*Tdead
+XU14 N003 N002 addk k=0.5
+XU15 N006 N005 addk k=0.5
+XU16 N010 N009 addk k=0.5
+.param Tpwm=250u
+.param Tdead=1u
+.ends two_level_sine_modulator
+
+.subckt pic32_three_phase_current_sampler i_raw_a i_raw_b i_raw_c i_a i_b i_c
+XU1 i_a i_raw_a Proportional K=1
+XU2 i_b i_raw_b Proportional K=1
+XU3 i_c i_raw_c Proportional K=1
+.ends pic32_three_phase_current_sampler
+
+.subckt inverse_park_transformation u v w theta d q
+XU2 d q N003 N001 N002 xyRotation
+XU3 N003 theta Proportional K=-1
+XU1 N001 N002 u v w ab-uvwTransformation
+.ends inverse_park_transformation
+
+.subckt xy_limit x1 y1 max x2 y2
+XX1 x1 y1 N003 x2 y2 xy_scale
+XU1 N004 Constant K=1
+XU2 x1 y1 N001 xy_amplitude
+XU3 N002 max N001 div
+XU4 N003 N002 N004 min
+.ends xy_limit
+
+.subckt pic32_throttle_sampler pos out
+XU1 out pos Proportional K=1
+.ends pic32_throttle_sampler
+
+.subckt torque_controller torque_ref iq_ref
+XU1 iq_ref torque_ref Proportional K=1
+.ends torque_controller
+
+.subckt stator_angle_estimator w_motor id_ref iq_ref angle_stator
+XU1 N001 Constant K=377
+XU2 angle_stator N001 Integral T=-1 Y0=0
+.param poles=2
+.param l_rotor=1
+.param r_rotor=1
+.ends stator_angle_estimator
+
+.subckt pic32_dc_voltage_sampler vdc_raw vdc
+XU1 vdc vdc_raw Proportional K=1
+.ends pic32_dc_voltage_sampler
+
+.subckt pi SP PV OUT
+XU1 Qp N001 Proportional K={Kp}
+XU3 N001 SP PV sub
+XU4 OUT Qp N002 add
+XU5 N002 N001 Qi_min Qi_max DynamicallyLimitedIntegral T={1/Ki} Y0=0
+XU2 Qi_max N003 Qp sub
+XU6 Qi_min N004 Qp sub
+XU7 N003 Constant K={max}
+XU8 N004 Constant K={min}
+.param Kp=1
+.param Ki=1
+.param max=100
+.param min=-100
+.ends pi
+
+.subckt xy_scale x1 y1 gain x2 y2
+XU3 x2 x1 gain mul
+XU1 y2 y1 gain mul
+.ends xy_scale
+
+.subckt xy_amplitude x y amp
+XU1 x y amp NC_01 xy-rpTransformation
+.ends xy_amplitude
+
+.model D D
+.lib F:\William\Documents\LTspiceXVII\lib\cmp\standard.dio
+.tran 200m startup
+.model SW SW(Ron=1 Roff=1Meg Vt=0.5)
+.model D D(Ron=.1 Roff=1Meg Vfwd=.4)
+.param R_motor1=1
+.param R_motor2=1
+.param L_motorm=0.1
+.param L_motorl1=1m
+.param L_motorl2=1m
+.param D_motor=10m
+.param J_motor=10m
+.param N_poles_motor=2
+.lib LTspiceControlLibrary\CoordinateTransformations.lib
+.lib LTspiceControlLibrary\Math.lib
+.lib LTspiceControlLibrary\Motors.lib
+.lib LTspiceControlLibrary\PulseModulations.lib
+.lib LTspiceControlLibrary\Sensors.lib
+.lib LTspiceControlLibrary\TransferFunctions.lib
+.backanno
+.end
