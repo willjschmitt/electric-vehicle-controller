@@ -1,35 +1,35 @@
 * F:\William\Documents\electric-vehicle-controller\spice\inverter_simulation.asc
 XU2 Vm_u Vm_v Vm_w Vm+ Vm- NC_01 NC_02 InductionMotor R1={R_motor1} R2={R_motor2} M={L_motorm} Ll1={L_motorl1} Ll2={L_motorl2} Dm={D_motor} Jm={J_motor} Np={N_poles_motor}
-S1 N008 V_DC UP 0 SW
-D1 N008 V_DC D
-S2 0 N008 UN 0 SW
-D2 0 N008 D
-S3 N009 V_DC VP 0 SW
-D3 N009 V_DC D
-S4 0 N009 VN 0 SW
-D4 0 N009 D
-S5 N010 V_DC WP 0 SW
-D5 N010 V_DC D
-S6 0 N010 WN 0 SW
-D6 0 N010 D
+S1 N006 V_DC UP 0 SW
+D1 N006 V_DC D
+S2 0 N006 UN 0 SW
+D2 0 N006 D
+S3 N007 V_DC VP 0 SW
+D3 N007 V_DC D
+S4 0 N007 VN 0 SW
+D4 0 N007 D
+S5 N008 V_DC WP 0 SW
+D5 N008 V_DC D
+S6 0 N008 WN 0 SW
+D6 0 N008 D
 V1 V_DC 0 600
 H1 w_motor 0 w_motor_i 1
 XU19 estimated_stator_angle N004 Integral T=-1 Y0=0
-V§w_motor_i Vm+ N011 0
+V§w_motor_i Vm+ N009 0
 V6 N004 0 377
 V§THROTTLE N005 0 5
 XU21 quadrature_current_reference N005 Proportional K=1
-XU30 voltage_reference_direct voltage_reference_quadrature N012 N006 N007 xyRotation
-XU31 N012 estimated_stator_angle Proportional K=-1
-XU32 N006 N007 voltage_reference_u voltage_reference_v voltage_reference_w ab-uvwTransformation
-R1 N011 Vm- .25
+R1 N009 Vm- .25
 XX3 direct_current_reference current_feedback_d quadrature_current_reference current_feedback_q voltage_reference_direct voltage_reference_quadrature current_regulator params: Kp=1 Ki=10000
 XX1 N001 N002 N003 estimated_stator_angle current_feedback_d current_feedback_q park_transformation
 XX2 voltage_reference_u voltage_reference_v voltage_reference_w UP UN VP VN WP WN V_DC two_level_sine_modulator
-XU1 N008 Vm_u i_m_u CurrentSensor
-XU3 N009 Vm_v i_m_v CurrentSensor
-XU4 N010 Vm_w i_m_w CurrentSensor
+XU1 N006 Vm_u i_m_u CurrentSensor
+XU3 N007 Vm_v i_m_v CurrentSensor
+XU4 N008 Vm_w i_m_w CurrentSensor
 XX4 i_m_u i_m_v i_m_w N001 N002 N003 pic32_three_phase_current_sampler
+XX5 voltage_reference_u voltage_reference_v voltage_reference_w estimated_stator_angle v_ref_d_lim v_ref_q_lim inverse_park_transformation
+XU5 voltage_reference_direct voltage_reference_quadrature N010 v_ref_d_lim v_ref_q_lim xy_limit
+XU6 N010 Constant K=100
 
 * block symbol definitions
 .subckt current_regulator current_ref_d current_fbk_d current_ref_q current_fbk_q voltage_ref_d voltage_ref_q
@@ -71,6 +71,20 @@ XU2 i_b i_raw_b Proportional K=1
 XU3 i_c i_raw_c Proportional K=1
 .ends pic32_three_phase_current_sampler
 
+.subckt inverse_park_transformation u v w theta d q
+XU2 d q N003 N001 N002 xyRotation
+XU3 N003 theta Proportional K=-1
+XU1 N001 N002 u v w ab-uvwTransformation
+.ends inverse_park_transformation
+
+.subckt xy_limit x1 y1 max x2 y2
+XX1 x1 y1 N003 x2 y2 xy_scale
+XU1 N004 Constant K=1
+XU2 x1 y1 N001 xy_amplitude
+XU3 N002 max N001 div
+XU4 N003 N002 N004 min
+.ends xy_limit
+
 .subckt pi SP PV OUT
 XU1 Qp N001 Proportional K={Kp}
 XU3 N001 SP PV sub
@@ -85,6 +99,15 @@ XU8 N004 Constant K={min}
 .param max=100
 .param min=-100
 .ends pi
+
+.subckt xy_scale x1 y1 gain x2 y2
+XU3 x2 x1 gain mul
+XU1 y2 y1 gain mul
+.ends xy_scale
+
+.subckt xy_amplitude x y amp
+XU1 x y amp NC_01 xy-rpTransformation
+.ends xy_amplitude
 
 .model D D
 .lib F:\William\Documents\LTspiceXVII\lib\cmp\standard.dio

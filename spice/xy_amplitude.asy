@@ -1,0 +1,37 @@
+Version 4
+SymbolType BLOCK
+LINE Normal 0 96 0 32
+LINE Normal 96 96 0 96
+LINE Normal 96 32 96 96
+LINE Normal 0 32 96 32
+LINE Normal -4 44 0 48
+LINE Normal 0 48 -4 52
+LINE Normal -4 76 0 80
+LINE Normal 0 80 -4 84
+LINE Normal 20 69 10 69
+LINE Normal 19 68 20 69
+LINE Normal 20 69 19 70
+LINE Normal 10 62 10 69
+LINE Normal 9 63 10 62
+LINE Normal 10 62 11 63
+LINE Normal 88 69 76 69 2
+LINE Normal 86 63 76 69
+LINE Normal 84 63 86 63
+LINE Normal 86 63 85 65
+LINE Normal 45 69 42 69
+LINE Normal 45 71 49 66
+LINE Normal 45 63 42 63
+LINE Normal 45 61 49 66
+LINE Normal 42 69 42 63
+LINE Normal 45 63 45 61
+LINE Normal 45 71 45 69
+ARC Normal 70 63 82 75 82 69 81 66
+PIN 0 48 LEFT 8
+PINATTR PinName x
+PINATTR SpiceOrder 1
+PIN 0 80 LEFT 8
+PINATTR PinName y
+PINATTR SpiceOrder 2
+PIN 96 48 RIGHT 8
+PINATTR PinName amp
+PINATTR SpiceOrder 3
