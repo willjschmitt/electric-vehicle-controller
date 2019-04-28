@@ -80,6 +80,10 @@ TEST_P(ModulationCommandsToVoltageTest, CalculatesCorrectly75PercentDuty) {
   const double kStartTimeSwitch = 0.0;
   commands[0] = ModulationCommand{SwitchOperation::HI, kStartTimeSwitch};
   commands[1] = ModulationCommand{SwitchOperation::LOW, kMidtimeSwitch};
+  commands[2] = ModulationCommand{SwitchOperation::HI, kStartTimeSwitch + 1.0};
+  commands[3] = ModulationCommand{SwitchOperation::LOW, kMidtimeSwitch  + 1.0};
+  commands[4] = ModulationCommand{SwitchOperation::HI, kStartTimeSwitch + 2.0};
+  commands[5] = ModulationCommand{SwitchOperation::LOW, kMidtimeSwitch + 2.0};
   const double kDCVoltage = 1200.0;
 
   const double& kExpectedVoltage = GetParam().second;

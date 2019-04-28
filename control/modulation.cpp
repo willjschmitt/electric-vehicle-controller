@@ -100,17 +100,17 @@ double ModulationCommandsToVoltage(
     const ModulationCommandBuffer& commands,
     const double& dc_voltage,
     const double& switching_period) {
+  const double calculation_period = ceil(commands[commands.size() - 1].time / switching_period);
+
   double voltage = 0.0;
-  for (unsigned int i = 0; i < commands.size() - 1; i++) {
-    const double delta_time = commands[i + 1].time - commands[i].time;
+  for (unsigned int i = 0; i < commands.size(); i++) {
+    const double delta_time = (i == commands.size() - 1)
+		                      ? calculation_period - commands[commands.size() - 1].time
+		                      : commands[i + 1].time - commands[i].time;
     const double switching_voltage = SwitchOperationToVoltage(
         commands[i].operation, dc_voltage);
-    voltage += switching_voltage * (delta_time / switching_period);
+    voltage += switching_voltage * (delta_time / calculation_period);
   }
-  const double last_voltage = SwitchOperationToVoltage(
-      commands[commands.size()-1].operation, dc_voltage);
-  const double last_time = switching_period - commands[commands.size()-1].time;
-  voltage += last_voltage * (last_time / switching_period);
 
   return voltage;
 }

@@ -73,7 +73,9 @@ double SwitchOperationToVoltage(const SwitchOperation& switch_operation,
                                 const double& dc_voltage);
 
 // Converts a series of ModulationCommand's into a voltage. First switch
-// operation must be at 0.0.
+// operation must be at 0.0. Total time can be larger than switching_period,
+// but the end of the complete period to calculate over is the first multiple
+// of switching_period greater than the last command time.
 double ModulationCommandsToVoltage(
     const ModulationCommandBuffer& commands,
     const double& dc_voltage,
