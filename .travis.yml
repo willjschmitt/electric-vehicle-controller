@@ -7,18 +7,10 @@ addons:
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-6
-      - g++-6
-      - cmake
+      - wget
+      - pkg-config
+before_install:
+  - wget https://github.com/bazelbuild/bazel/releases/download/0.24.1/bazel_0.24.1-linux-x86_64.deb
+  - sudo dpkg -i bazel_0.24.1-linux-x86_64.deb
 script:
-  # Link gcc-6 and g++-6 to their standard commands
-  - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
-  # Export CC and CXX to tell cmake which compiler to use
-  - export CC=/usr/bin/gcc-6
-  - export CXX=/usr/bin/g++-6
-  # Build
-  - cmake .
-  - make
-  # Test
-  - ctest --verbose
+  - bazel test //...

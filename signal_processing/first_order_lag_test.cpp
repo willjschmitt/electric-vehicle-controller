@@ -16,7 +16,6 @@ using std::chrono::system_clock;
 
 TEST(FirstOrderLag, ReturnsInitalValue) {
   SettableTimer timer;
-  system_clock::time_point current_time = system_clock::now();
   const double kTau = 10.0;
   FirstOrderLag first_order_lag(&timer, kTau);
   constexpr double kInputValue = 20.0;
@@ -58,9 +57,3 @@ TEST(FirstOrderLag, LagsAtTimeConstant) {
 }  // namespace
 }  // namespace signal_processing
 }  // namespace electric_vehicle
-
-int main(int argc, char** argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
