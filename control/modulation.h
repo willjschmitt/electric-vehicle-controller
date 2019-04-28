@@ -34,10 +34,12 @@ struct ModulationCommand {
   double time;
 };
 
-// A Map of phases to a size-6 array of modulation commands to execute. Size is
-// set to 6 to support turn on/off in one cycle and then 3 cycles (finishing
-// cycle, current cycle, next cycle).
-using ModulationCommands = std::map<Phase, std::array<ModulationCommand, 6>>;
+// Size is set to 6 to support turn on/off in one cycle and then 3 cycles
+// (finishing cycle, current cycle, next cycle).
+using ModulationCommandBuffer = std::array<ModulationCommand, 6>;
+
+// A Map of phases to a ModulationCommandBuffer to execute.
+using ModulationCommands = std::map<Phase, ModulationCommandBuffer>;
 
 // Modulates a three-phase instantaneous voltage reference into modulation
 // commands to turn IGBTs on and off
@@ -73,7 +75,7 @@ double SwitchOperationToVoltage(const SwitchOperation& switch_operation,
 // Converts a series of ModulationCommand's into a voltage. First switch
 // operation must be at 0.0.
 double ModulationCommandsToVoltage(
-    const std::vector<ModulationCommand>& commands,
+    const ModulationCommandBuffer& commands,
     const double& dc_voltage,
     const double& switching_period);
 

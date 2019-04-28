@@ -97,7 +97,7 @@ double SwitchOperationToVoltage(const SwitchOperation& switch_operation,
 }
 
 double ModulationCommandsToVoltage(
-    const std::vector<ModulationCommand>& commands,
+    const ModulationCommandBuffer& commands,
     const double& dc_voltage,
     const double& switching_period) {
   double voltage = 0.0;

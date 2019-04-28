@@ -27,9 +27,9 @@ TEST(TwoLevelSineModulator, Modulates) {
   const ModulationCommands modulation_commands = modulator.Modulate(
     kACReferences, kDCVoltage);
 
-  ASSERT_EQ(modulation_commands.at(Phase::A).size(), (unsigned int)2);
-  ASSERT_EQ(modulation_commands.at(Phase::B).size(), (unsigned int)2);
-  ASSERT_EQ(modulation_commands.at(Phase::C).size(), (unsigned int)2);
+  ASSERT_EQ(modulation_commands.at(Phase::A).size(), (unsigned int)6);
+  ASSERT_EQ(modulation_commands.at(Phase::B).size(), (unsigned int)6);
+  ASSERT_EQ(modulation_commands.at(Phase::C).size(), (unsigned int)6);
   ASSERT_EQ(modulation_commands.at(Phase::A)[0].time, 0.0);
   ASSERT_EQ(modulation_commands.at(Phase::B)[0].time, 0.0);
   ASSERT_EQ(modulation_commands.at(Phase::C)[0].time, 0.0);
@@ -74,12 +74,12 @@ class ModulationCommandsToVoltageTest
 
 TEST_P(ModulationCommandsToVoltageTest, CalculatesCorrectly75PercentDuty) {
   const double& kTimeToSwitch = GetParam().first;
-  std::vector<ModulationCommand> commands;
+  ModulationCommandBuffer commands;
   const double kSwitchingPeriod = 1.0;
   const double kMidtimeSwitch = kTimeToSwitch;
   const double kStartTimeSwitch = 0.0;
-  commands.push_back(ModulationCommand{SwitchOperation::HI, kStartTimeSwitch});
-  commands.push_back(ModulationCommand{SwitchOperation::LOW, kMidtimeSwitch});
+  commands[0] = ModulationCommand{SwitchOperation::HI, kStartTimeSwitch};
+  commands[1] = ModulationCommand{SwitchOperation::LOW, kMidtimeSwitch};
   const double kDCVoltage = 1200.0;
 
   const double& kExpectedVoltage = GetParam().second;
