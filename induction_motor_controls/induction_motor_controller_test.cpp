@@ -106,7 +106,7 @@ class InductionMotorControllerTest : public ::testing::Test {
 // This test is mostly to enforce compilation and linking for the composite
 // elements.
 TEST_F(InductionMotorControllerTest, Creates) {
-  const ModulationCommands modulation_commands = controller->CoreControlsTask();
+  const ModulationCommands<6> modulation_commands = controller->CoreControlsTask();
 }
 
 // Quickly checks that the main control loop executes quickly enough.
@@ -119,7 +119,7 @@ TEST_F(InductionMotorControllerTest, PerformanceTest) {
   const std::chrono::system_clock::time_point start_time
       = std::chrono::system_clock::now();
   for (unsigned int i = 0; i < kNumberOfTimes; i++) {
-    const ModulationCommands modulation_commands = controller->CoreControlsTask();
+    const ModulationCommands<6> modulation_commands = controller->CoreControlsTask();
   }
   const std::chrono::system_clock::time_point end_time
       = std::chrono::system_clock::now();

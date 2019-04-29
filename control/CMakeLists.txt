@@ -42,13 +42,16 @@ target_link_libraries(
 add_library(
   modulation
   modulation.h
-  modulation.cpp)
+  modulation_commands.h
+  modulation.cpp
+  modulation_commands.cpp)
 target_link_libraries(
   modulation
   clarke_transformations)
 add_executable(
   modulation_test
-  modulation_test.cpp)
+  modulation_test.cpp
+  modulation_commands_test.cpp)
 add_test(modulation_test modulation_test)
 target_link_libraries(
   modulation_test

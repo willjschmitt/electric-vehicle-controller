@@ -42,7 +42,7 @@ class InductionMotorController {
 
   // Core controls task loop. To be executed at PWM frequency ~= 10kHz.
   // Generates PWM commands.
-  ::electric_vehicle::control::ModulationCommands CoreControlsTask();
+  ::electric_vehicle::control::ModulationCommands<6> CoreControlsTask();
 
  private:
   // Samples the throttle position.

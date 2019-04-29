@@ -54,13 +54,13 @@ double TwoLevelSineModulationDutyCycle(
 
 }  // namespace
 
-ModulationCommands TwoLevelSineModulator::Modulate(
+ModulationCommands<6> TwoLevelSineModulator::Modulate(
     const ThreePhase& voltage_references, const double& dc_voltage) const {
   const ThreePhase& voltages_with_third_harmonic
       = AddThirdHarmonic(voltage_references);
   
   // Load the commands per phase into the return structure.
-  ModulationCommands commands;
+  ModulationCommands<6> commands;
   for (int i = 0; i < 3; i++) {
     const Phase phase = IntegerToPhase(i);
     const double ac_voltage_reference = voltages_with_third_harmonic[i];
@@ -69,50 +69,17 @@ ModulationCommands TwoLevelSineModulator::Modulate(
     
     // Always start with the switch turned on.
     // TODO(#1): Add deadband to stay off below a certain duty cycle.
-    ModulationCommand turn_on;
-    turn_on.operation = SwitchOperation::HI;
-    turn_on.time = 0.0;
+    ModulationCommand turn_on{ SwitchOperation::HI, 0.0 };
   
     // Turn the switch off at the duty cycle time.
     // TODO(#1): Add deadband to keep on above a certain duty cycle.
-    ModulationCommand turn_off;
-    turn_off.operation = SwitchOperation::LOW;
-    turn_off.time = duty_cycle * switching_period_;
+    ModulationCommand turn_off{
+      SwitchOperation::LOW, duty_cycle * switching_period_ };
     
-    commands[phase] = {turn_on, turn_off};
+    commands.ForPhase(phase).PushBack(turn_on);
+    commands.ForPhase(phase).PushBack(turn_off);
   }
   return commands;
-}
-
-double SwitchOperationToVoltage(const SwitchOperation& switch_operation,
-                                const double& dc_voltage) {
-  switch (switch_operation) {
-  case SwitchOperation::OFF:
-    throw "Invalid SwitchOperation OFF";
-  case SwitchOperation::HI:
-    return +dc_voltage / 2.0;
-  case SwitchOperation::LOW:
-    return -dc_voltage / 2.0;
-  }
-}
-
-double ModulationCommandsToVoltage(
-    const ModulationCommandBuffer& commands,
-    const double& dc_voltage,
-    const double& switching_period) {
-  const double calculation_period = ceil(commands[commands.size() - 1].time / switching_period);
-
-  double voltage = 0.0;
-  for (unsigned int i = 0; i < commands.size(); i++) {
-    const double delta_time = (i == commands.size() - 1)
-		                      ? calculation_period - commands[commands.size() - 1].time
-		                      : commands[i + 1].time - commands[i].time;
-    const double switching_voltage = SwitchOperationToVoltage(
-        commands[i].operation, dc_voltage);
-    voltage += switching_voltage * (delta_time / calculation_period);
-  }
-
-  return voltage;
 }
 
 }  // namespace control

@@ -15,7 +15,7 @@ using ::electric_vehicle::signal_processing::ParkTransformation;
 using ::electric_vehicle::signal_processing::ThreePhase;
 using ::electric_vehicle::signal_processing::TwoDimensionalVector;
 
-ModulationCommands InductionMotorController::CoreControlsTask() {
+ModulationCommands<6> InductionMotorController::CoreControlsTask() {
   const double throttle = throttle_sampler_->Sample();
   
   const double quadrature_current_reference = TorqueController(throttle);
@@ -40,7 +40,7 @@ ModulationCommands InductionMotorController::CoreControlsTask() {
   const ThreePhase voltage_reference_abc = InverseParkTransformation(
       voltage_reference, estimated_stator_angle);
   const double dc_voltage = dc_voltage_sampler_->Sample();
-  const ModulationCommands modulation_commands = modulator_.Modulate(
+  const ModulationCommands<6> modulation_commands = modulator_.Modulate(
       voltage_reference_abc, dc_voltage);
   return modulation_commands;
 }
