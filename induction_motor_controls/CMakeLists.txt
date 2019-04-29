@@ -29,4 +29,5 @@ add_test(induction_motor_controller_test induction_motor_controller_test)
 target_link_libraries(
   induction_motor_controller_test
   induction_motor_controller
-  gtest)
+  gtest
+  gmock)

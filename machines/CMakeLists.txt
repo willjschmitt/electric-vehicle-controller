@@ -18,4 +18,5 @@ add_test(induction_machine_test induction_machine_test)
 target_link_libraries (
   induction_machine_test
   induction_machine
-  gtest)
+  gtest
+  gmock)

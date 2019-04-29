@@ -22,6 +22,7 @@ target_link_libraries (
   current_regulator_test
   current_regulator
   gtest
+  gmock
   timer)
 
 add_library(
@@ -35,7 +36,8 @@ add_test(timer_test timer_test)
 target_link_libraries(
   timer_test
   timer
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   modulation
@@ -52,7 +54,8 @@ target_link_libraries(
   modulation_test
   modulation
   clarke_transformations
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   stator_angle_estimator
@@ -70,4 +73,5 @@ add_test(stator_angle_estimator_test stator_angle_estimator_test)
 target_link_libraries(
   stator_angle_estimator_test
   stator_angle_estimator
-  gtest)
+  gtest
+  gmock)

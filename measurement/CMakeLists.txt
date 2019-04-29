@@ -18,7 +18,8 @@ add_test(three_phase_currents_test three_phase_currents_test)
 target_link_libraries(
   three_phase_currents_test
   three_phase_currents
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   dc_voltage
@@ -31,7 +32,8 @@ add_test(dc_voltage_test dc_voltage_test)
 target_link_libraries(
   dc_voltage_test
   dc_voltage
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   throttle
@@ -44,7 +46,8 @@ add_test(throttle_test throttle_test)
 target_link_libraries(
   throttle_test
   throttle
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   mechanical_speed
@@ -57,4 +60,5 @@ add_test(mechanical_speed_test mechanical_speed_test)
 target_link_libraries(
   mechanical_speed_test
   mechanical_speed
-  gtest)
+  gtest
+  gmock)

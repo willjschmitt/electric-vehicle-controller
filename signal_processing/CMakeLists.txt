@@ -18,7 +18,8 @@ add_test(angle_math_test angle_math_test)
 target_link_libraries (
   angle_math_test
   angle_math
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   clarke_transformations
@@ -34,7 +35,8 @@ add_test(clarke_transformations_test clarke_transformations_test)
 target_link_libraries (
   clarke_transformations_test
   clarke_transformations
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   first_order_lag
@@ -50,7 +52,8 @@ add_test(first_order_lag_test first_order_lag_test)
 target_link_libraries (
   first_order_lag_test
   first_order_lag
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   pi
@@ -66,7 +69,8 @@ add_test(pi_test pi_test)
 target_link_libraries (
   pi_test
   pi
-  gtest)
+  gtest
+  gmock)
 
 add_library(
   integrator
@@ -82,4 +86,5 @@ add_test(integrator_test integrator_test)
 target_link_libraries(
   integrator_test
   integrator
-  gtest)
+  gtest
+  gmock)
