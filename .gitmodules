@@ -1,7 +1,0 @@
-[submodule "googletest"]
-	path = googletest
-	url = https://github.com/google/googletest
-	ignore = dirty
-[submodule "cmake-microchip"]
-	path = cmake-microchip
-	url = git://github.com/willjschmitt/cmake-microchip.git
