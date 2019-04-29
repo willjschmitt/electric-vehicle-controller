@@ -101,7 +101,6 @@ TEST(ClarkeTransformation, CalculatesAngle90) {
 TEST(ClarkeTransformation, CalculatesZeroSequence) {
   ThreePhase abc;
   const double kMagnitude = 1.0;
-  const double kTheta = 0.0;
   abc.A() = kMagnitude;
   abc.B() = kMagnitude;
   abc.C() = kMagnitude;
@@ -195,9 +194,3 @@ TEST(InverseParkTransformation, ParkTransformationIsReversible) {
 }  // namespace
 }  // namespace signal_processing
 }  // namespace electric_vehicle
-
-int main(int argc, char** argv)
-{
-  ::testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
-}
