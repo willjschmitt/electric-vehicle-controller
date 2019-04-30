@@ -45,17 +45,27 @@ cc_test(
 
 cc_library(
   name = "first_order_lag",
-  srcs = ["first_order_lag.cpp"],
-  hdrs = ["first_order_lag.h"],
+  srcs = [
+      "first_order_lag.cpp",
+  ],
+  hdrs = [
+      "first_order_lag.h",
+      "two_dimensional_first_order_lag.h"
+  ],
   deps = [
+    ":angle_math",
     "//control:timer",
   ]
 )
 
 cc_test(
   name = "first_order_lag_test",
-  srcs = ["first_order_lag_test.cpp"],
+  srcs = [
+      "first_order_lag_test.cpp",
+      "two_dimensional_first_order_lag_test.cpp",
+  ],
   deps = [
+    ":angle_math",
     ":first_order_lag",
     "@gtest//:gtest",
     "@gtest//:gtest_main"
