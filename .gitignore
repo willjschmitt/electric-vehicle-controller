@@ -73,3 +73,7 @@ bazel-electric-vehicle-controller
 bazel-genfiles
 bazel-out
 bazel-testlogs
+
+# Clion Files
+.clwb/
+.idea/
