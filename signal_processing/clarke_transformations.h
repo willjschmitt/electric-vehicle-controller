@@ -3,6 +3,7 @@
 
 #include <array>
 #include <vector>
+#include "angle_math.h"
 
 namespace electric_vehicle {
 namespace signal_processing {
@@ -20,6 +21,18 @@ struct DirectQuadrature {
   double quadrature;
   double zero;
 
+  DirectQuadrature()
+      : direct(0.0), quadrature(0.0), zero(0.0) {}
+
+  DirectQuadrature(const double d, const double q)
+      : direct(d), quadrature(q), zero(0.0) {}
+
+  DirectQuadrature(const double d, const double q, const double z)
+      : direct(d), quadrature(q), zero(z) {}
+
+  DirectQuadrature(const TwoDimensionalVector& xy)
+      : direct(xy.x), quadrature(xy.y) {}
+
   inline DirectQuadrature operator-(const DirectQuadrature& rhs) const {
     DirectQuadrature result;
     result.direct = this->direct - rhs.direct;
@@ -34,6 +47,11 @@ struct DirectQuadrature {
     result.quadrature = this->quadrature + rhs.quadrature;
     result.zero = this->zero + rhs.zero;
     return result;
+  }
+
+  // Convert DQ values into generic 2d vector.
+  inline TwoDimensionalVector XY() const {
+    return { direct, quadrature };
   }
 };
 

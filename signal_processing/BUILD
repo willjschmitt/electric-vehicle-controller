@@ -50,6 +50,7 @@ cc_library(
   ],
   hdrs = [
       "first_order_lag.h",
+      "three_phase_dq_filtered.h",
       "two_dimensional_first_order_lag.h"
   ],
   deps = [
@@ -62,10 +63,12 @@ cc_test(
   name = "first_order_lag_test",
   srcs = [
       "first_order_lag_test.cpp",
+      "three_phase_dq_filtered_test.cpp",
       "two_dimensional_first_order_lag_test.cpp",
   ],
   deps = [
     ":angle_math",
+    ":clarke_transformations",
     ":first_order_lag",
     "@gtest//:gtest",
     "@gtest//:gtest_main"
