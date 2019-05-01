@@ -6,7 +6,6 @@
 #include "control/timer.h"
 #include "signal_processing/angle_math.h"
 #include "signal_processing/first_order_lag.h"
-#include "../control/timer.h"
 
 namespace electric_vehicle {
 namespace signal_processing {
@@ -20,10 +19,18 @@ class TwoDimensionalFirstOrderLag {
   TwoDimensionalFirstOrderLag(TimerInterface* const timer, const double& tau)
       : filters_{FirstOrderLag(timer, tau), FirstOrderLag(timer, tau)} {}
 
-  inline TwoDimensionalVector TwoDimensionalFirstOrderLag::Solve(const TwoDimensionalVector& unfiltered) {
+  inline TwoDimensionalVector Solve(const TwoDimensionalVector& unfiltered) {
     return {
       filters_.at(0).Solve(unfiltered.x),
       filters_.at(1).Solve(unfiltered.y)
+    };
+  }
+
+  // Returns the last value passed to Solve.
+  inline TwoDimensionalVector UnfilteredLast() const {
+    return {
+        filters_.at(0).UnfilteredLast(),
+        filters_.at(1).UnfilteredLast()
     };
   }
 

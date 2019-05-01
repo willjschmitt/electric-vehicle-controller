@@ -27,37 +27,54 @@ EXPECT_DOUBLE_EQ(got.y, kInputValue.y);
 }
 
 TEST(TwoDimensionalFirstOrderLag, LagsAtTimeConstant) {
-SettableTimer timer;
-double current_time = 123.45;
-const double kTau = 1.0;
-TwoDimensionalFirstOrderLag first_order_lag(&timer, kTau);
-constexpr TwoDimensionalVector kInitialValue = {0.0, 0.0};
-constexpr TwoDimensionalVector kInputValue = {1.0, 0.5};
-timer.SetTime(current_time);
-TwoDimensionalVector got;
-got = first_order_lag.Solve(kInitialValue);
-EXPECT_DOUBLE_EQ(got.x, kInitialValue.x);
-EXPECT_DOUBLE_EQ(got.y, kInitialValue.y);
+  SettableTimer timer;
+  double current_time = 123.45;
+  const double kTau = 1.0;
+  TwoDimensionalFirstOrderLag first_order_lag(&timer, kTau);
+  constexpr TwoDimensionalVector kInitialValue = {0.0, 0.0};
+  constexpr TwoDimensionalVector kInputValue = {1.0, 0.5};
+  timer.SetTime(current_time);
+  TwoDimensionalVector got;
+  got = first_order_lag.Solve(kInitialValue);
+  EXPECT_DOUBLE_EQ(got.x, kInitialValue.x);
+  EXPECT_DOUBLE_EQ(got.y, kInitialValue.y);
 
-// Make 10 small steps to the first time constant.
-for (unsigned int i = 0; i < 1000; i++) {
-current_time += 0.001;
-timer.SetTime(current_time);
-got = first_order_lag.Solve(kInputValue);
-}
-constexpr double kOneTimeConstant = 0.632;
-EXPECT_NEAR(got.x, kOneTimeConstant, 0.001);
-EXPECT_NEAR(got.y, kOneTimeConstant * 0.5, 0.001);
+  // Make 10 small steps to the first time constant.
+  for (unsigned int i = 0; i < 1000; i++) {
+    current_time += 0.001;
+    timer.SetTime(current_time);
+    got = first_order_lag.Solve(kInputValue);
+  }
+  constexpr double kOneTimeConstant = 0.632;
+  EXPECT_NEAR(got.x, kOneTimeConstant, 0.001);
+  EXPECT_NEAR(got.y, kOneTimeConstant * 0.5, 0.001);
 
-// Make 10 small steps to the first time constant.
-for (unsigned int i = 0; i < 1000; i++) {
-current_time += 0.001;
-timer.SetTime(current_time);
-got = first_order_lag.Solve(kInputValue);
+  // Make 10 small steps to the first time constant.
+  for (unsigned int i = 0; i < 1000; i++) {
+    current_time += 0.001;
+    timer.SetTime(current_time);
+    got = first_order_lag.Solve(kInputValue);
+  }
+  constexpr double kTwoTimeConstant = 0.865;
+  EXPECT_NEAR(got.x, kTwoTimeConstant, 0.001);
+  EXPECT_NEAR(got.y, kTwoTimeConstant * 0.5, 0.001);
 }
-constexpr double kTwoTimeConstant = 0.865;
-EXPECT_NEAR(got.x, kTwoTimeConstant, 0.001);
-EXPECT_NEAR(got.y, kTwoTimeConstant * 0.5, 0.001);
+
+TEST(TwoDimensionalFirstOrderLag, UnfilteredLast) {
+  SettableTimer timer;
+  double current_time = 123.45;
+  TwoDimensionalFirstOrderLag first_order_lag(&timer, /*tau=*/1.0);
+
+  // Make 10 small steps to the first time constant.
+  for (unsigned int i = 0; i < 1000; i++) {
+    current_time += 0.001;
+    timer.SetTime(current_time);
+    first_order_lag.Solve({ current_time, current_time + 1});
+
+    const TwoDimensionalVector got = first_order_lag.UnfilteredLast();
+    EXPECT_DOUBLE_EQ(got.x, current_time, 0.001);
+    EXPECT_DOUBLE_EQ(got.y, current_time + 1, 0.001);
+  }
 }
 
 }  // namespace
