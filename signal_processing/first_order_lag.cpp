@@ -4,6 +4,8 @@ namespace electric_vehicle {
 namespace signal_processing {
 
 double FirstOrderLag::Solve(const double& unfiltered) {
+  unfiltered_last_ = unfiltered;
+
   // If the instance hasn't been solved yet, output the input value, and
   // initialize the filter to the input value.
   if (!evaluated_) {

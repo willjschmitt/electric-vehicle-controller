@@ -54,6 +54,20 @@ TEST(FirstOrderLag, LagsAtTimeConstant) {
   EXPECT_NEAR(got, kTwoTimeConstant, 0.001);
 }
 
+TEST(FirstOrderLag, UnfilteredLast) {
+  SettableTimer timer;
+  FirstOrderLag first_order_lag(&timer, /*tau=*/1.0);
+
+  // Make 1000 small steps to the first time constant.
+  double current_time = 123.45;
+  for (unsigned int i = 0; i < 1000; i++) {
+    current_time += 0.001;
+    timer.SetTime(current_time);
+    first_order_lag.Solve(current_time);
+    EXPECT_DOUBLE_EQ(first_order_lag.UnfilteredLast(), current_time);
+  }
+}
+
 }  // namespace
 }  // namespace signal_processing
 }  // namespace electric_vehicle

@@ -17,7 +17,14 @@ class FirstOrderLag {
         filtered_last_(0.0),
         evaluated_ (false) {}
 
+  // Solves one timestep, filtering the unfiltered signal.
+  // If calling for the first time, the filter is initialized to this value.
   double Solve(const double& unfiltered);
+
+  // Returns the last value passed to Solve.
+  inline const double& UnfilteredLast() const {
+    return unfiltered_last_;
+  }
 
  private:
   // Retrieves the delta time since the last time the instance was solved.
@@ -29,6 +36,7 @@ class FirstOrderLag {
   TimerInterface* timer_;
   double tau_;
 
+  double unfiltered_last_;
   double filtered_last_;
 
   // Boolean indicating if the instance has been solved at least once yet.
