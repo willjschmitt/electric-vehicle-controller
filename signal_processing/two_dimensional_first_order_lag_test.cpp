@@ -72,8 +72,8 @@ TEST(TwoDimensionalFirstOrderLag, UnfilteredLast) {
     first_order_lag.Solve({ current_time, current_time + 1});
 
     const TwoDimensionalVector got = first_order_lag.UnfilteredLast();
-    EXPECT_DOUBLE_EQ(got.x, current_time, 0.001);
-    EXPECT_DOUBLE_EQ(got.y, current_time + 1, 0.001);
+    EXPECT_NEAR(got.x, current_time, 0.001);
+    EXPECT_NEAR(got.y, current_time + 1, 0.001);
   }
 }
 
