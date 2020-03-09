@@ -1,5 +1,5 @@
 # electric-vehicle-controller
-[![Build Status](https://travis-ci.org/willjschmitt/electric-vehicle-controller.svg?branch=master)](https://travis-ci.org/willjschmitt/electric-vehicle-controller)
+[![willjschmitt](https://circleci.com/gh/willjschmitt/electric-vehicle-controller.svg?style=shield)](<https://circleci.com/gh/willjschmitt/electric-vehicle-controller>)
 
 AC Induction Motor Controller for an Electric Vehicle
 
