@@ -1,3 +1,7 @@
+# MPLAB Generated Files
+.generated_files/
+Makefile
+
 # Prerequisites
 *.d
 
