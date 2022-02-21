@@ -1,5 +1,15 @@
 version: 2.1
 
+commands:
+  install-bazel:
+    steps:
+      - run:
+          name: Install Bazel
+          command: |
+            apt install -y bash-completion
+            wget https://github.com/bazelbuild/bazel/releases/download/4.2.0/bazel_4.2.0-linux-x86_64.deb
+            dpkg -i bazel_4.2.0-linux-x86_64.deb
+
 jobs:
   test:
     docker:
@@ -13,12 +23,7 @@ jobs:
           command: |
             apt update
 
-      - run:
-          name: Install Bazel
-          command: |
-            apt install -y bash-completion
-            wget https://github.com/bazelbuild/bazel/releases/download/4.2.0/bazel_4.2.0-linux-x86_64.deb
-            dpkg -i bazel_4.2.0-linux-x86_64.deb
+      - install-bazel
 
       - run:
           name: Execute tests
