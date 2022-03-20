@@ -1,38 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="62">
+<configurationDescriptor version="65">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f3" displayName="control" projectFiles="true">
+      <logicalFolder name="control" displayName="control" projectFiles="true">
         <itemPath>control/current_regulator.h</itemPath>
         <itemPath>control/modulation.h</itemPath>
+        <itemPath>control/modulation_commands.h</itemPath>
         <itemPath>control/stator_angle_estimator.h</itemPath>
         <itemPath>control/timer.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f5"
+      <logicalFolder name="induction_motor_controls"
                      displayName="induction_motor_controls"
                      projectFiles="true">
         <itemPath>induction_motor_controls/induction_motor_controller.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="machines" projectFiles="true">
+      <logicalFolder name="machines" displayName="machines" projectFiles="true">
         <itemPath>machines/induction_machine.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="measurement" projectFiles="true">
+      <logicalFolder name="measurement" displayName="measurement" projectFiles="true">
         <itemPath>measurement/dc_voltage.h</itemPath>
         <itemPath>measurement/mechanical_speed.h</itemPath>
         <itemPath>measurement/three_phase_currents.h</itemPath>
         <itemPath>measurement/throttle.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f1" displayName="signal_processing" projectFiles="true">
+      <logicalFolder name="signal_processing"
+                     displayName="signal_processing"
+                     projectFiles="true">
         <itemPath>signal_processing/angle_math.h</itemPath>
         <itemPath>signal_processing/clarke_transformations.h</itemPath>
         <itemPath>signal_processing/first_order_lag.h</itemPath>
         <itemPath>signal_processing/integrator.h</itemPath>
         <itemPath>signal_processing/math_constants.h</itemPath>
         <itemPath>signal_processing/pi.h</itemPath>
+        <itemPath>signal_processing/three_phase_dq_filtered.h</itemPath>
+        <itemPath>signal_processing/two_dimensional_first_order_lag.h</itemPath>
       </logicalFolder>
-      <itemPath>config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -41,27 +45,30 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="control" projectFiles="true">
+      <logicalFolder name="control" displayName="control" projectFiles="true">
         <itemPath>control/current_regulator.cpp</itemPath>
         <itemPath>control/modulation.cpp</itemPath>
+        <itemPath>control/modulation_commands.cpp</itemPath>
         <itemPath>control/stator_angle_estimator.cpp</itemPath>
         <itemPath>control/timer.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f5"
+      <logicalFolder name="induction_motor_controls"
                      displayName="induction_motor_controls"
                      projectFiles="true">
         <itemPath>induction_motor_controls/induction_motor_controller.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="machines" projectFiles="true">
+      <logicalFolder name="machines" displayName="machines" projectFiles="true">
         <itemPath>machines/induction_machine.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="measurement" projectFiles="true">
+      <logicalFolder name="measurement" displayName="measurement" projectFiles="true">
         <itemPath>measurement/dc_voltage.cpp</itemPath>
         <itemPath>measurement/mechanical_speed.cpp</itemPath>
         <itemPath>measurement/three_phase_currents.cpp</itemPath>
         <itemPath>measurement/throttle.cpp</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="signal_processing" projectFiles="true">
+      <logicalFolder name="signal_processing"
+                     displayName="signal_processing"
+                     projectFiles="true">
         <itemPath>signal_processing/angle_math.cpp</itemPath>
         <itemPath>signal_processing/clarke_transformations.cpp</itemPath>
         <itemPath>signal_processing/first_order_lag.cpp</itemPath>
@@ -69,6 +76,7 @@
         <itemPath>signal_processing/pi.cpp</itemPath>
       </logicalFolder>
       <itemPath>main.cpp</itemPath>
+      <itemPath>config.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -77,11 +85,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>signal_processing</Elem>
-    <Elem>measurement</Elem>
-    <Elem>control</Elem>
-    <Elem>machines</Elem>
-    <Elem>induction_motor_controls</Elem>
+    <Elem>.</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -91,11 +95,16 @@
         <targetDevice>PIC32MK1024GPE100</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PKOBSKDEPlatformTool</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.05</languageToolchainVersion>
+        <languageToolchainVersion>3.01</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
+      <packs>
+        <pack name="PIC32MK-GP_DFP" vendor="Microchip" version="1.5.130"/>
+      </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -113,6 +122,7 @@
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
+        <makeUseCleanTarget>false</makeUseCleanTarget>
         <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
@@ -133,13 +143,14 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros" value=""/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
+        <property key="tentative-definitions" value="-fno-common"/>
         <property key="toplevel-reordering" value=""/>
         <property key="unaligned-access" value=""/>
         <property key="use-cci" value="false"/>
@@ -169,8 +180,13 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+        <property key="stack-guidance" value="false"/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
+        <property key="additional-options-write-sla" value="false"/>
         <property key="allocate-dinit" value="false"/>
         <property key="code-dinit" value="false"/>
         <property key="ebase-addr" value=""/>
@@ -188,7 +204,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="2048"/>
+        <property key="heap-size" value="4096"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -224,7 +240,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
-        <property key="optimization-level" value="-O1"/>
+        <property key="optimization-level" value=""/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -236,43 +252,21 @@
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="use-indirect-calls" value="false"/>
+        <appendMe value="-I&quot;C:\Users\willj\Documents\electric-vehicle\electric-vehicle-controller&quot;"/>
       </C32CPP>
       <C32Global>
-        <property key="common-include-directories"
-                  value="../electric-vehicle-controller"/>
+        <property key="common-include-directories" value=""/>
         <property key="gp-relative-option" value=""/>
         <property key="legacy-libc" value="true"/>
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
+        <property key="stack-smashing" value=""/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <PKOBSKDEPlatformTool>
-        <property key="AutoSelectMemRanges" value="auto"/>
-        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
-        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="memories.configurationmemory" value="true"/>
-        <property key="memories.dataflash" value="true"/>
-        <property key="memories.eeprom" value="true"/>
-        <property key="memories.id" value="true"/>
-        <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="1d000000-1d0fffff"/>
-        <property key="memories.userotp" value="true"/>
-        <property key="programoptions.donoteraseauxmem" value="false"/>
-        <property key="programoptions.eraseb4program" value="true"/>
-        <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges" value=""/>
-        <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveeeprom.ranges" value=""/>
-        <property key="programoptions.preserveprogram.ranges" value=""/>
-        <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.usehighvoltageonmclr" value="false"/>
-        <property key="programoptions.uselvpprogramming" value="true"/>
-      </PKOBSKDEPlatformTool>
     </conf>
   </confs>
 </configurationDescriptor>
