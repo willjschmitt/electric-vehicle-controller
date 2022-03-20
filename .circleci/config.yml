@@ -11,7 +11,7 @@ commands:
             dpkg -i bazel_4.2.0-linux-x86_64.deb
 
 jobs:
-  test:
+  test-x86:
     docker:
       - image: gcc:9.2.0
 
@@ -33,4 +33,4 @@ jobs:
 workflows:
   test:
     jobs:
-      - test
+      - test-x86
