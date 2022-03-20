@@ -1,6 +1,9 @@
 cc_library(
   name = "induction_motor_controller",
   srcs = ["induction_motor_controller.cpp"],
+  visibility = [
+      "//:__pkg__",
+  ],
   hdrs = ["induction_motor_controller.h"],
   deps = [
     "//control:current_regulator",
