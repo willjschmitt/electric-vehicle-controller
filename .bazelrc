@@ -1,0 +1,9 @@
+# Use our custom-configured c++ toolchain.
+build:xc32 --crosstool_top=@rules_microchip//toolchain/xc32:xc32_suite
+
+# Use --cpu as a differentiator.
+build:xc32 --cpu=mcp32
+
+# Use the default Bazel C++ toolchain to build the tools used during the
+# build.
+build:xc32 --host_crosstool_top=@bazel_tools//tools/cpp:toolchain

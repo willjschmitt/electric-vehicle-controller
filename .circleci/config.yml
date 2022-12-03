@@ -30,7 +30,44 @@ jobs:
           command: |
             bazel test //...
 
+  # Cross-compiles all relevant targets with the XC32 C++ compiler. This builds
+  # artifacts suitable for running on PIC microcontrollers.
+  #
+  # We don't run unit tests against xc32-compiled targets, since our tests are
+  # generally entirely run with gtest, which isn't runnable in an MCP32
+  # environment, and we don't have remote execution anyways for executing tests
+  # on a PIC controller.
+  build-xc32:
+    docker:
+      - image: gcc:9.2.0
+
+    steps:
+      - checkout
+
+      - run:
+          name: Update APT
+          command: |
+            apt update
+
+      - install-bazel
+
+      - run:
+          name: Build targets with MCP32 CPU target
+          # Tests depending on gtest are excluded, since gtest is not compilable
+          # for MCP32 platforms. Automated unit test are executed in the `test`
+          # job on a linux x86 architecture.
+          command: |
+            # Build the controller explicitly, since the controller is marked as
+            # manual.
+            # TODO(willjschmitt): Remove //:electric_vehicle_controller once the
+            #  target is included by cpu constraint instead of using manual
+            #  tags.
+            bazel build --config=xc32 --sandbox_debug \
+                $(bazel query '//... except (//... intersect allpaths(//..., @gtest//:gtest_main))') \
+                //:electric_vehicle_controller
+
 workflows:
   test:
     jobs:
       - test-x86
+      - build-xc32

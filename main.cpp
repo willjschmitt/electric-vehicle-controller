@@ -1,6 +1,14 @@
 #include "config.h"
 
-#include <xc.h>
+// TODO(willjschmitt): Installing in our headless environment is more
+//  complicated than a GUI IDE environment, so we are using the deprecated
+//  approach to including the specific per-device header. This should be changed
+//  once the Bazel toolchain can properly install the XC32 compiler as we would
+//  expect it on a headfull machine like a Windows desktop. Once completed, the
+//  xc.h header can be included instead of the specific device header.
+// #include <xc.h>
+#include "proc/p32mk1024gpe100.h"
+
 #include <sys/attribs.h>
 
 #include "control/current_regulator.h"
