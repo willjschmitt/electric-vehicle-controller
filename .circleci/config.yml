@@ -7,8 +7,8 @@ commands:
           name: Install Bazel
           command: |
             apt install -y bash-completion
-            wget https://github.com/bazelbuild/bazel/releases/download/4.2.0/bazel_4.2.0-linux-x86_64.deb
-            dpkg -i bazel_4.2.0-linux-x86_64.deb
+            wget https://github.com/bazelbuild/bazel/releases/download/5.3.2/bazel_5.3.2-linux-x86_64.deb
+            dpkg -i bazel_5.3.2-linux-x86_64.deb
 
 jobs:
   test-x86:
